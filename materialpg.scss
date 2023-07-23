@@ -1,0 +1,2284 @@
+/* Componentes de Material Design, utilizando las lineas de dseño V2 y V3 https://m3.material.io/ */
+
+/*
+SG Legacy
+- #ba334d
+- #479aff
+- #650a11
+- #998e8e
+*/
+
+/* Importar la fuente */
+@use "sass/variables" as v;
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@400;500&display=swap");
+
+@import "sass/layout";
+@import "sass/animations";
+@import "sass/navigationbar";
+@import "sass/cards";
+@import "sass/chips";
+@import "sass/buttons";
+
+/* Puntos en los que se divide el diseño responsivo */
+
+* {
+    transition: all v.$durationMedium4 v.$easingStandard, color v.$durationShort4 v.$easingStandard;
+}
+
+body {
+    background-color: v.$colorBackground;
+    min-width: 100%;
+}
+
+html {
+    color: v.$colorOnSurface;
+}
+
+/* Texto */
+span {
+    display: flex;
+    transition: none !important;
+    color: inherit;
+    flex-wrap: wrap;
+    column-gap: 4px;
+}
+
+/* Texto seleccionado */
+
+::selection {
+    color: v.$colorOnTertiaryContainer;
+    background: v.$colorTertiaryContainer;
+}
+
+/* width */
+
+::-webkit-scrollbar {
+    width: 8px;
+
+    /* Track */
+    &-track {
+        background-color: v.$colorBackground;
+    }
+
+    /* Handle */
+    &-thumb {
+        background-color: v.$colorSurfaceContainerHigh;
+        border-radius: 4px;
+        transition: background-color v.$durationMedium1 v.$easingStandardDecelerate;
+        opacity: 0.2;
+
+        &:hover {
+            background-color: v.$colorSurfaceContainerHighest;
+        }
+    }
+}
+
+/* Hipervinculos */
+a {
+    font-family: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    text-decoration: none;
+    color: v.$colorPrimary;
+    transition: color v.$durationMedium4 v.$easingStandardDecelerate;
+
+    &:hover {
+        color: v.$colorTertiary;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.icon {
+    font-family: v.$materialSymbols !important;
+    display: inline-block;
+    vertical-align: bottom;
+    font-variation-settings: "FILL" 0, "wght" 500, "opsz" 24;
+    line-height: inherit;
+
+    &.color {
+        color: v.$colorPrimary;
+    }
+
+    &.big {
+        font-variation-settings: "FILL" 0, "wght" 500, "opsz" 48 !important;
+
+        [data-theme="dark"] & {
+            font-variation-settings: "FILL" 0, "wght" 400, "opsz" 48 !important;
+        }
+    }
+
+    &.filled {
+        font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+
+        [data-theme="dark"] & {
+            font-variation-settings: "FILL" 1, "wght" 300, "opsz" 24 !important;
+        }
+    }
+
+    [data-theme="dark"] & {
+        font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
+    }
+}
+
+span .icon::after {
+    content: " ";
+    padding-right: 3px;
+}
+
+.hidden {
+    display: none !important;
+
+    &-anim {
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0, 0);
+    }
+}
+
+.transparent {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    animation-name: md-appear v.$durationMedium3 v.$easingEmphasizedDecelerate reverse;
+}
+
+div.disabled {
+    pointer-events: none !important;
+    opacity: 0.6 !important;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    margin-left: 88px;
+    min-height: calc(100% - 64px);
+
+    &.fixed {
+        height: 100%;
+        width: 100%;
+        padding-top: 64px;
+        margin-left: 0;
+        flex-direction: row;
+        top: 0;
+        left: 0;
+        position: absolute;
+    }
+}
+
+.footer,
+#footer {
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+.statusbadge {
+    padding: 8px 16px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    border-radius: 16px;
+    text-align: center;
+    @extend .label-md;
+}
+
+#status {
+    border-radius: 16px;
+    color: v.$colorBackground;
+    width: fit-content;
+    display: flex;
+    padding: 6px 16px 6px 13px;
+
+    &::before {
+        font-family: v.$materialSymbols;
+        display: block;
+        line-height: inherit;
+        padding-right: 4px;
+        font-variation-settings: "FILL" 1, "wght" 600, "opsz" 20;
+        color: v.$colorBackground;
+
+        [data-theme="dark"] & {
+            font-variation-settings: "FILL" 1, "wght" 500, "opsz" 20;
+        }
+    }
+
+    &.current {
+        background-color: var(--md-custom-color-good);
+
+        &::before {
+            content: "done";
+        }
+    }
+
+    &.behind {
+        background-color: var(--md-custom-color-warning);
+
+        &::before {
+            content: "warning";
+        }
+    }
+
+    &.delinquent {
+        background-color: v.$colorError;
+
+        &::before {
+            content: "report";
+        }
+    }
+}
+
+/* HEADER ======================================================= */
+
+.topbar {
+    background-color: v.$colorSurface;
+    color: v.$colorOnSurface;
+    @extend .title-lg;
+    line-height: 64px;
+    height: 64px;
+    position: sticky;
+    top: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    z-index: 16;
+    transition: box-shadow v.$durationMedium2 v.$easingStandard, background-color v.$durationMedium2 v.$easingStandard;
+
+    &.scrolled {
+        background-color: v.$colorSurfaceContainer;
+        @include v.elevation(2);
+    }
+
+    .menu {
+        display: none;
+    }
+
+    .logo {
+        position: absolute;
+        height: 100%;
+        padding: 8px;
+        width: 100%;
+        z-index: 1;
+        background-color: transparent;
+        display: flex;
+        justify-content: center;
+    }
+
+    span {
+        float: left;
+        padding: 0 16px;
+        overflow: hidden;
+    }
+
+    ul {
+        display: flex;
+        align-items: center;
+        list-style: none;
+        margin: 0;
+        margin-block: 0;
+        padding: 0;
+
+        li {
+            overflow: hidden;
+            position: relative;
+
+            .desc {
+                display: none;
+            }
+        }
+    }
+
+    &.short {
+        .menu {
+            display: flex;
+            justify-content: center;
+        }
+
+        ul {
+            background-color: v.$colorSurface;
+            border-radius: v.$cornerMedium;
+            position: absolute;
+            min-width: 112px;
+            max-width: 280px;
+            flex-direction: column;
+            top: 64px;
+            right: 2px;
+            visibility: hidden;
+            // pointer-events: none;
+            opacity: 0;
+            padding: 8px 0;
+            @include v.elevation(2);
+            transition: all v.$durationShort4 v.$easingStandard;
+        }
+
+        .menu {
+            &:active ~ ul,
+            &:focus ~ ul {
+                visibility: visible;
+                opacity: 1;
+                pointer-events: initial;
+            }
+        }
+
+        ul {
+            &::before {
+                content: " ";
+                background-color: v.$colorPrimary;
+                opacity: 0.1;
+                border-radius: 12px;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+            }
+
+            li {
+                display: flex;
+                width: 100% !important;
+
+                .item {
+                    display: flex;
+                    align-items: center;
+                    overflow: visible;
+                    width: 100% !important;
+                    position: relative;
+                    height: 48px;
+                    margin: 0;
+                    padding: 0 12px;
+                    transition: all v.$durationShort4 v.$easingStandardDecelerate;
+                    cursor: pointer;
+                    text-align: left;
+                    font-size: 24px;
+                    vertical-align: middle;
+                    z-index: 5;
+                    color: v.$colorOnSurfaceVariant;
+                    font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
+                }
+            }
+
+            li {
+                .item::before {
+                    width: 100%;
+                    border-radius: 0;
+                    height: 100%;
+                    left: 0;
+                    overflow: hidden;
+                    top: 0;
+                }
+            }
+
+            li {
+                .desc {
+                    @extend .label-lg;
+                    display: block;
+                    padding: 0 0 0 12px;
+                }
+            }
+        }
+    }
+
+    .button {
+        z-index: 2;
+        width: 64px;
+        text-align: center;
+        margin: 0;
+
+        a {
+            &:hover {
+                color: v.$colorOnSurfaceVariant;
+            }
+
+            &:hover::before {
+                opacity: v.$stateHover;
+            }
+
+            &:focus::before {
+                opacity: v.$stateFocus;
+            }
+
+            &:active::before {
+                opacity: v.$statePressed;
+            }
+
+            &::before {
+                content: "";
+                transition: all v.$durationShort4 v.$easingStandardDecelerate;
+                opacity: 0;
+                width: 40px;
+                height: 40px;
+                top: 4px;
+                left: 4px;
+                border-radius: 50%;
+                position: absolute;
+                background-color: v.$colorOnSurfaceVariant;
+            }
+        }
+
+        &.selected a {
+            color: v.$colorPrimary;
+            font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+
+            &:hover {
+                color: v.$colorPrimary;
+            }
+
+            &::before {
+                background-color: v.$colorPrimary;
+            }
+        }
+
+        .item {
+            position: relative;
+            width: 48px;
+            height: 48px;
+            padding: 8px;
+            transition: all v.$durationShort4 v.$easingStandardDecelerate;
+            cursor: pointer;
+            text-align: center;
+            line-height: 32px;
+            font-size: 24px;
+            vertical-align: middle;
+            margin: 8px;
+            z-index: 2;
+            color: v.$colorOnSurfaceVariant;
+            font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
+        }
+    }
+
+    .twopanel & {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+    }
+}
+
+/* FORMULARIO =================================================== */
+
+form {
+    display: flex;
+    margin: 0;
+    flex-direction: column;
+    row-gap: 8px;
+}
+
+/* TEXTFIELD BUSCADOR =========================== */
+
+.searcharea {
+    display: flex;
+    flex-direction: column;
+    border-radius: 24px;
+    margin: 16px 0 8px 0;
+
+    /* overflow: hidden; */
+    position: relative;
+}
+
+.searchbar {
+    display: flex;
+    position: relative;
+    background-color: v.$colorSurfaceVariant;
+    flex-direction: row;
+    @include v.elevation(3);
+    border-radius: 24px;
+    width: 100%;
+    height: 48px;
+    min-height: 48px;
+    overflow: hidden;
+
+    .searchfield {
+        outline: none;
+        border: 0;
+        color: v.$colorOnSurface;
+        font-size: var(--md-sys-typescale-body-medium-font-size);
+        background-color: transparent;
+        height: 100%;
+        @extend .body-md;
+        padding: 0 0 0 24px;
+        overflow: hidden;
+
+        &::placeholder {
+            color: v.$colorOnSurfaceVariant;
+            opacity: 0.5;
+        }
+    }
+
+    [class*="button-"].icon {
+        display: flex;
+        align-items: center;
+        border: none;
+        position: relative;
+        @extend .title-lg;
+        vertical-align: middle;
+        height: 100%;
+        background-color: v.$colorSurfaceVariant;
+        color: v.$colorOnSurfaceVariant;
+        padding: 0 16px;
+        overflow: hidden;
+        border-radius: 0;
+        text-align: center;
+        justify-content: center;
+
+        &::after {
+            background-color: v.$colorOnPrimaryContainer;
+            padding: 0;
+            border-radius: 0;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+
+        &:hover {
+            color: v.$colorPrimary;
+        }
+    }
+}
+
+.searchsuggestions {
+    ~ .searchbar {
+        border-radius: 24px;
+        z-index: 3;
+        box-shadow: none;
+    }
+
+    display: grid;
+    position: absolute;
+    width: 100%;
+    background-color: v.$colorSurfaceVariant;
+    padding: 0;
+    grid-template-rows: 0fr;
+    grid-template-columns: 1fr;
+    pointer-events: none;
+    z-index: 3;
+    overflow-y: auto;
+    padding-top: 48px;
+    border-radius: 24px;
+    @include v.elevation(3);
+    transition: grid-template-rows v.$durationMedium2 v.$easingEmphasized, box-shadow v.$durationMedium2 v.$easingEmphasized;
+
+    &.list {
+        padding: 0;
+    }
+}
+
+#searchsuggestions {
+    overflow: hidden;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    > .listitem:first-child {
+        border-top: 1px solid v.$colorOutline;
+    }
+}
+
+.searchsuggestions.show {
+    &:empty {
+        border-top: 0;
+    }
+
+    pointer-events: all;
+    grid-template-rows: 1fr;
+    @include v.elevation(4);
+}
+
+/* BARRA DE HERRAMIENTAS =========================== */
+
+.toolbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 16px 0 8px 0;
+    justify-content: space-between;
+
+    .button {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 24px;
+        font-family: v.$materialSymbols;
+        font-variation-settings: "FILL" 1, "wght" 300, "opsz" 24;
+        cursor: pointer;
+        float: left;
+        text-align: center;
+        border-radius: 24px;
+        overflow: hidden;
+        color: v.$colorOnSurfaceVariant;
+        margin: 4px;
+
+        &::before {
+            position: absolute;
+            content: " ";
+            width: 40px;
+            height: 40px;
+            top: 0;
+            left: 0;
+            background-color: v.$colorSurfaceVariant;
+            opacity: 0;
+            border-radius: 20px;
+        }
+
+        &:hover::before {
+            opacity: v.$stateHover;
+        }
+    }
+
+    #back {
+        left: 0;
+    }
+}
+
+/* SEPARATOR ====================================== */
+
+.separator {
+    background-color: v.$colorOutline;
+    width: 100%;
+    height: 1px;
+    margin: 16px 0;
+    opacity: 0.5;
+
+    &.vertical {
+        width: 1px;
+        height: 100%;
+        margin: 0 16px;
+    }
+
+    &.mini {
+        margin: 0;
+    }
+}
+
+/* TEXTFIELD & TEXTAREA =========================== */
+
+input,
+textarea {
+    width: 100%;
+}
+
+input:disabled {
+    pointer-events: none !important;
+}
+
+[class*="textfield-"] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    &.number input {
+        text-align: right;
+    }
+
+    .support {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .placeholder {
+        color: v.$colorOnSurfaceVariant;
+        @extend .body-sm;
+        padding: 4px 16px 0 16px;
+        min-height: 20px;
+        flex: 10;
+        justify-content: space-between;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-align: justify;
+    }
+
+    .counter {
+        color: v.$colorOnSurfaceVariant;
+        @extend .body-sm;
+        padding: 4px 16px 0 0;
+        text-align: right;
+        width: fit-content;
+    }
+
+    input:disabled {
+        opacity: v.$stateDisabledContent;
+    }
+}
+
+/* Outlined */
+
+.textfield-outlined {
+    margin: 6px 0 6px 0;
+    background-color: inherit;
+
+    input,
+    select,
+    textarea {
+        min-height: 52px;
+        padding: 10px 16px 10px 16px;
+        display: block;
+        z-index: 1;
+        border: 1px solid v.$colorOutline;
+        border-radius: v.$cornerExtraSmall;
+        @extend .body-lg;
+        color: v.$colorOnSurface;
+        caret-color: v.$colorPrimary;
+        background-color: inherit;
+        transition: all v.$durationShort4 v.$easingStandard;
+    }
+
+    input:disabled,
+    select:disabled,
+    textarea:disabled {
+        border: 1px solid v.$colorOnSurface;
+    }
+
+    input:disabled:hover,
+    select:disabled:hover,
+    textarea:disabled:hover {
+        border: 1px solid v.$colorOnSurface;
+        opacity: v.$stateDisabledContent;
+    }
+
+    input:read-write:hover,
+    select:read-write:hover,
+    textarea:read-write:hover {
+        border: 1px solid v.$colorOnSurface;
+    }
+
+    input:read-only,
+    select:read-only,
+    textarea:read-only {
+        border: 1px solid v.$colorSurfaceVariant;
+    }
+}
+
+input:read-only {
+    cursor: default;
+}
+
+.textfield-outlined {
+    input:read-only:focus,
+    select:read-only:focus,
+    textarea:read-only:focus {
+        border: 1px solid v.$colorSurfaceVariant;
+        outline: none;
+    }
+
+    input:read-write:focus,
+    select:read-write:focus,
+    textarea:read-write:focus {
+        outline: 1px solid v.$colorPrimary;
+        border: 1px solid v.$colorPrimary;
+    }
+
+    &.withicon {
+        input,
+        select,
+        textarea {
+            padding-left: 52px;
+        }
+    }
+
+    .icon {
+        font-size: 24px;
+        line-height: 24px;
+        z-index: 2;
+        width: 24px;
+        height: 24px;
+        color: v.$colorOnSurfaceVariant;
+        font-variation-settings: "FILL" 1, "wght" 500, "opsz" 24;
+        position: absolute;
+        pointer-events: none;
+        left: 0px;
+        top: 0px;
+        margin: 16px 16px 16px 12px;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .trailicon {
+        font-size: 24px;
+        line-height: 24px;
+        width: 24px;
+        z-index: 2;
+        height: 24px;
+        color: v.$colorOnSurfaceVariant;
+        font-family: v.$materialSymbols;
+        font-variation-settings: "FILL" 0, "wght" 500, "opsz" 24;
+        position: absolute;
+        pointer-events: none;
+        right: 0px;
+        top: 0px;
+        margin: 16px 12px 16px 16px;
+        text-align: center;
+    }
+
+    .icon ~ input {
+        padding-left: 52px;
+    }
+
+    .trailicon ~ input {
+        padding-right: 52px;
+    }
+
+    label {
+        margin: 14px;
+        height: 24px;
+        color: v.$colorOnSurfaceVariant;
+        position: absolute;
+        pointer-events: none;
+        overflow: clip;
+        text-overflow: ellipsis;
+        left: 0px;
+        top: 0px;
+        transition: all v.$durationMedium2 v.$easingStandard;
+        @extend .body-lg;
+        z-index: 1;
+        transition: all v.$durationShort4 v.$easingStandard;
+    }
+
+    .icon ~ label {
+        top: 0;
+        left: 36px;
+    }
+
+    &.withicon label {
+        margin-left: 52px;
+    }
+
+    &.open input ~ label {
+        color: v.$colorOnSurfaceVariant;
+    }
+
+    input:read-write:focus ~ label,
+    select:read-write:focus ~ label,
+    textarea:read-write:focus ~ label {
+        color: v.$colorPrimary;
+    }
+
+    &.open {
+        input ~ label,
+        select ~ label,
+        textarea ~ label {
+            top: -22px;
+            height: 16px;
+            left: -4px;
+            line-height: var(--md-sys-typescale-body-small-line-height);
+            font-size: var(--md-sys-typescale-body-small-font-size);
+            padding: 0 4px;
+            background-color: v.$colorSurface;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    input:read-write:focus ~ label,
+    select:read-write:focus ~ label,
+    textarea:read-write:focus ~ label {
+        top: -22px;
+        height: 16px;
+        left: -4px;
+        line-height: var(--md-sys-typescale-body-small-line-height);
+        font-size: var(--md-sys-typescale-body-small-font-size);
+        padding: 0 4px;
+        background-color: v.$colorSurface;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &.withicon {
+        &.open {
+            input ~ label,
+            select ~ label,
+            textarea ~ label {
+                top: -24px;
+                left: -42px;
+            }
+        }
+
+        input:focus ~ label,
+        select:focus ~ label,
+        textarea:focus ~ label {
+            top: -24px;
+            left: -42px;
+        }
+    }
+
+    &.open {
+        input ~ label::before,
+        select ~ label::before,
+        textarea ~ label::before {
+            @extend %before-show;
+            opacity: 0;
+            background-color: v.$colorPrimary;
+        }
+    }
+
+    input:focus ~ label::before,
+    select:focus ~ label::before,
+    textarea:focus ~ label::before {
+        @extend %before-show;
+        opacity: 0;
+        background-color: v.$colorPrimary;
+    }
+}
+
+/* activo */
+
+/* Filled */
+.textfield-filled {
+    input,
+    textarea {
+        min-height: 56px;
+        padding: 22px 16px 8px 16px;
+        display: block;
+        border: none;
+        border-bottom: 1px solid v.$colorOnSurfaceVariant;
+        background-color: v.$colorSurfaceVariant;
+        border-radius: v.$cornerExtraSmallTop;
+        @extend .body-lg;
+        color: v.$colorOnSurface;
+        caret-color: v.$colorPrimary;
+        position: relative;
+    }
+
+    .input {
+        position: relative;
+
+        &::after {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            content: "";
+            border-radius: v.$cornerExtraSmallTop;
+            background-color: v.$colorOnSurface;
+            opacity: 0;
+            transition: opacity v.$durationMedium1 v.$easingStandard;
+            pointer-events: none;
+        }
+
+        &:hover::after {
+            opacity: v.$stateHover;
+        }
+    }
+
+    textarea:focus,
+    input:focus {
+        outline: none;
+    }
+
+    .leading ~ {
+        input,
+        textarea {
+            padding-left: 52px;
+        }
+    }
+
+    .trailing ~ {
+        input,
+        textarea {
+            padding-right: 52px;
+        }
+    }
+
+    .leading,
+    .trailing {
+        position: absolute;
+        display: flex;
+        font-size: 20px;
+        height: 100%;
+        color: v.$colorOnSurfaceVariant;
+        font-variation-settings: "FILL" 1, "wght" 600, "opsz" 24;
+        align-items: center;
+        top: 0;
+        padding: 0 12px;
+        z-index: 1;
+        width: 48px;
+        justify-content: center;
+    }
+
+    .leading {
+        pointer-events: none;
+        left: 0;
+    }
+
+    .trailing {
+        right: 0;
+        height: 100%;
+    }
+}
+
+/* Leading and Trailing icons */
+
+[data-theme="dark"] .textfield-filled .trailing.icon {
+    font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+}
+
+.textfield-filled {
+    .btn {
+        cursor: pointer;
+
+        &:focus-visible,
+        &:focus {
+            outline: none;
+        }
+
+        &::before {
+            position: absolute;
+            content: "";
+            top: 50%;
+            left: 50%;
+            background-color: v.$colorOnSurface;
+            transition: all v.$durationMedium2 v.$easingStandard;
+            border-radius: 50%;
+            width: 0;
+            height: 0;
+            opacity: 0;
+        }
+
+        &:hover::before,
+        &:focus::before,
+        &:active::before {
+            top: calc(50% - 18px);
+            left: calc(50% - 18px);
+            width: 36px;
+            height: 36px;
+        }
+
+        &:hover::before {
+            opacity: v.$stateHover;
+        }
+
+        &:focus::before {
+            opacity: v.$stateFocus;
+        }
+
+        &:active::before {
+            opacity: v.$statePressed;
+        }
+    }
+
+    label {
+        margin: 16px;
+        color: v.$colorOnSurfaceVariant;
+        position: absolute;
+        pointer-events: none;
+        left: 0;
+        top: 0;
+        transition: all v.$durationMedium3 v.$easingStandard;
+        @extend .body-lg;
+    }
+
+    .leading ~ label {
+        margin-left: 52px;
+    }
+
+    &.open {
+        input ~ label,
+        textarea ~ label {
+            top: -10px;
+            @extend .body-sm;
+            color: v.$colorPrimary;
+        }
+    }
+
+    input:focus ~ label,
+    textarea:focus ~ label {
+        top: -10px;
+        @extend .body-sm;
+        color: v.$colorPrimary;
+    }
+
+    .placeholder {
+        color: v.$colorOnSurfaceVariant;
+        @extend .body-sm;
+        padding: 4px 16px 0 16px;
+    }
+}
+
+/* activo */
+
+/* barra inferior */
+
+.bar {
+    position: relative;
+    display: block;
+    width: 100%;
+
+    &:before,
+    &:after {
+        content: "";
+        height: 2px;
+        width: 0;
+        bottom: 0px;
+        position: absolute;
+        background: v.$colorPrimary;
+        transition: all v.$durationMedium2 v.$easingEmphasized;
+    }
+
+    &:before {
+        left: 50%;
+    }
+
+    &:after {
+        right: 50%;
+    }
+}
+
+/* activo */
+
+input:focus ~ .bar {
+    &:before,
+    &:after {
+        width: 50%;
+    }
+}
+
+textarea:focus ~ .bar {
+    &:before,
+    &:after {
+        width: 50%;
+    }
+}
+
+/* Error */
+
+[class*="textfield-"].error {
+    input,
+    textarea {
+        caret-color: v.$colorError;
+    }
+}
+
+.textfield-filled.error {
+    input,
+    textarea {
+        border-bottom: 1px solid v.$colorError;
+    }
+}
+
+.textfield-outlined {
+    &.error {
+        input {
+            border: 1px solid v.$colorError;
+
+            &:focus {
+                outline: 1px solid v.$colorError;
+                border: 1px solid v.$colorError;
+            }
+        }
+
+        textarea:focus {
+            outline: 1px solid v.$colorError;
+            border: 1px solid v.$colorError;
+        }
+
+        input:hover {
+            outline-color: v.$colorOnErrorContainer;
+            border: 1px solid v.$colorOnErrorContainer;
+        }
+
+        textarea:hover {
+            outline-color: v.$colorOnErrorContainer;
+            border: 1px solid v.$colorOnErrorContainer;
+
+            ~ label {
+                color: v.$colorOnErrorContainer;
+            }
+        }
+
+        &.open textarea:hover ~ label {
+            color: v.$colorOnErrorContainer;
+        }
+
+        input:hover ~ {
+            label,
+            .trailicon.error {
+                color: v.$colorOnErrorContainer;
+            }
+        }
+
+        &.open input:hover ~ label {
+            color: v.$colorOnErrorContainer;
+        }
+    }
+
+    .trailicon.error {
+        color: v.$colorError;
+        font-variation-settings: "FILL" 1, "wght" 500, "opsz" 24;
+    }
+}
+
+[class*="textfield-"].error {
+    label,
+    textarea:focus ~ label,
+    &.open textarea ~ label,
+    input:focus ~ label,
+    &.open input ~ label,
+    .placeholder {
+        color: v.$colorError;
+    }
+}
+
+/* activo */
+
+/* barra inferior */
+
+.textfield-filled.error .bar {
+    &:before,
+    &:after {
+        background: v.$colorError;
+    }
+}
+
+/* Selects */
+
+select {
+    position: relative;
+
+    option {
+        background-color: v.$colorSurfaceVariant;
+        color: v.$colorOnSurfaceVariant;
+    }
+
+    &.outlined {
+        background-color: v.$colorBackground;
+        color: v.$colorOnSurfaceVariant;
+        outline: none;
+        border: 1px solid v.$colorOutline;
+        border-radius: 6px;
+        width: 100%;
+        white-space: pre-wrap;
+        text-overflow: ellipsis;
+
+        &:active {
+            outline: none;
+        }
+
+        &:focus option,
+        &:active option {
+            background-color: v.$colorBackground;
+        }
+
+        option {
+            background-color: v.$colorBackground;
+            color: v.$colorOnSurfaceVariant;
+            padding: 16px 16px;
+            white-space: pre-wrap;
+            width: 100%;
+            text-overflow: ellipsis;
+            cursor: pointer;
+
+            &:hover {
+                background-color: v.$colorSurfaceVariant;
+            }
+        }
+    }
+}
+
+/* Chrome, Safari, Edge, Opera */
+
+input {
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+    }
+
+    &[type="number"],
+    &[type="date"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+}
+
+/* Firefox */
+
+[data-theme="dark"] {
+    input,
+    select {
+        color-scheme: dark;
+    }
+}
+
+/* TABLA ====================================================== */
+
+table {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid v.$colorOutline;
+    border-spacing: 0;
+}
+
+tr {
+    height: 52px;
+}
+
+td {
+    padding: 0 16px;
+    color: v.$colorOnSurface;
+    border-top: 1px solid v.$colorOutline;
+    margin: 0;
+
+    &.tcenter {
+        text-align: center;
+    }
+}
+
+th {
+    height: 56px;
+    color: v.$colorOnSurface;
+}
+
+/* ACORDEON =================================================== */
+
+.cardaccordion {
+    border-top: 1px solid v.$colorOutline;
+    overflow: hidden;
+
+    &.open > .accordion-title::after {
+        border-radius: 0;
+    }
+
+    > .accordion-title::after {
+        border-radius: 0 0 12px 12px;
+    }
+}
+
+.accordion {
+    overflow: hidden;
+}
+
+.accordion-title {
+    padding: 16px 46px 16px 24px;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+
+    &::before {
+        display: flex;
+        height: 100%;
+        position: absolute;
+        padding: 0 16px;
+        margin: 0;
+        font-size: 1.5em;
+        content: "expand_more";
+        right: 0;
+        bottom: 0;
+        font-family: v.$materialSymbols;
+        color: inherit;
+        align-items: center;
+    }
+
+    &::after {
+        @extend %before-show;
+        opacity: 0;
+    }
+
+    &:hover::after {
+        opacity: v.$stateHover;
+    }
+
+    &:focus::after {
+        opacity: v.$stateFocus;
+    }
+
+    &:active::after {
+        opacity: v.$statePressed;
+    }
+}
+
+.open {
+    > .accordion-title::before {
+        transform: rotate(180deg);
+    }
+
+    > .accordion-content {
+        grid-template-rows: 1fr;
+    }
+}
+
+.accordion-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows v.$durationLong1 v.$easingEmphasized;
+
+    > div {
+        overflow: hidden;
+        transition: padding v.$durationLong1 v.$easingEmphasized;
+    }
+}
+
+div:not(.open) > .accordion-content > div {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* LISTA ====================================================== */
+
+.list {
+    padding: 8px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &.noclick .listitem {
+        cursor: default;
+
+        &:not(.listitem:last-child) {
+            border-bottom: 1px solid v.$colorOutline;
+        }
+    }
+
+    &.border .listitem {
+        border-bottom: 1px solid v.$colorSurfaceVariant;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+}
+
+.listitem {
+    width: 100%;
+    padding: 8px 24px 8px 16px;
+    z-index: 1;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    column-gap: 16px;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    flex-wrap: nowrap;
+    min-height: 48px;
+
+    &::before {
+        @extend %before-show;
+        background-color: v.$colorOnSurface;
+        opacity: 0;
+        transition: all v.$durationShort3 v.$easingStandardDecelerate;
+    }
+
+    .icon {
+        color: v.$colorPrimary;
+        font-size: 24px;
+        flex: 0 0 24px;
+
+        &.error {
+            color: v.$colorError;
+        }
+    }
+
+    div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    span {
+        color: v.$colorOnSurface;
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &:hover::before {
+        opacity: v.$stateHover;
+    }
+
+    &:focus::before {
+        opacity: v.$stateFocus;
+    }
+
+    &:active::before {
+        opacity: v.$statePressed;
+    }
+}
+
+.searchresults {
+    height: 100%;
+}
+
+/* DESCRIPTION GROUP ============================================ */
+
+.block-description {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+    padding: 8px 0;
+
+    div {
+        flex: 1;
+    }
+}
+
+/* Pantalla de Cargando ======================================================= */
+
+#loading-wrapper {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    flex-direction: column;
+    row-gap: 30px;
+    opacity: 1;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    padding: 0 24px;
+    animation: md-appear v.$durationMedium3 v.$easingEmphasizedDecelerate;
+    justify-content: center;
+    align-items: center;
+
+    &::before {
+        @extend %before-show;
+        background-color: v.$colorBackground;
+        opacity: 0.3;
+    }
+}
+
+/* DIALOGO ======================================================= */
+
+.dialog-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 30;
+    display: none;
+    opacity: 0;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    animation: md-appear v.$durationMedium3 v.$easingEmphasizedDecelerate;
+
+    &::before {
+        background-color: v.$colorBackground;
+        opacity: 0.3;
+        @extend %before-show;
+    }
+
+    &.show {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 1;
+    }
+}
+
+.dialog {
+    display: none;
+    position: relative;
+    background-color: v.$colorSurface;
+    border-radius: 28px;
+    min-width: 280px;
+    max-width: 560px;
+    height: fit-content;
+    max-height: 100%;
+    padding: 24px;
+    margin: 24px;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    align-content: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    opacity: 0;
+    @include v.elevation(3);
+    animation: md-midgrow v.$durationMedium2 v.$easingEmphasizedDecelerate;
+
+    &::before {
+        z-index: 7;
+        @extend %before-show;
+        opacity: 0.11;
+        background-color: v.$colorPrimary;
+    }
+
+    &.show {
+        display: flex;
+        opacity: 1;
+    }
+
+    .header-sm {
+        color: v.$colorOnSurface;
+        margin-bottom: 16px;
+    }
+
+    .body-md {
+        color: v.$colorOnSurfaceVariant;
+    }
+
+    > .icon {
+        color: v.$colorSecondary;
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .icon ~ .header-sm {
+        text-align: center;
+        margin-top: 16px;
+        justify-content: center;
+    }
+
+    .buttonarea {
+        margin-top: 24px;
+    }
+
+    .dialogcontent {
+        overflow-y: auto;
+    }
+}
+
+/* CHECKBOX ==================================================== */
+.listitem .checkbox {
+    z-index: 1;
+}
+
+.checkbox {
+    position: relative;
+    width: 0;
+    height: 0;
+    margin: 16px;
+
+    &::before {
+        position: absolute;
+        font-family: v.$materialSymbols;
+        font-variation-settings: "FILL" 1, "wght" 400, "GRAD" -25, "opsz" 24;
+        font-size: 24px;
+        line-height: 18px;
+        text-align: center;
+        content: "check_box_outline_blank";
+        top: -9px;
+        left: -12px;
+        width: 18px;
+        height: 18px;
+        pointer-events: all;
+        z-index: 2;
+        color: v.$colorOnSurface;
+    }
+
+    &:checked::before {
+        content: "check_box";
+        color: v.$colorPrimary;
+    }
+
+    &::after {
+        position: absolute;
+        content: "";
+        top: -20px;
+        left: -20px;
+        background-color: v.$colorOnSurface;
+        width: 40px;
+        height: 40px;
+        pointer-events: all;
+        border-radius: 50%;
+        opacity: 0;
+    }
+
+    &:hover::after {
+        opacity: v.$stateHover;
+    }
+
+    &:checked::after {
+        background-color: v.$colorPrimary;
+    }
+
+    &:focus {
+        outline: none;
+
+        &::after {
+            opacity: v.$stateFocus;
+        }
+    }
+
+    &:active::after {
+        opacity: v.$statePressed;
+    }
+}
+
+/* SWITCH ====================================================== */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+}
+
+/* Hide default HTML checkbox */
+
+/* The slider */
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 32px;
+    width: 52px;
+    background-color: v.$colorSurfaceVariant;
+    border: 2px solid v.$colorOutline;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 34px;
+
+    &:after {
+        position: absolute;
+        content: "";
+        height: 40px;
+        width: 40px;
+        left: -6px;
+        top: -6px;
+        background-color: v.$colorPrimary;
+        -webkit-transition: v.$durationLong1 v.$easingStandardDecelerate;
+        transition: v.$durationLong1 v.$easingStandardDecelerate;
+        border-radius: 50%;
+        opacity: 0;
+    }
+
+    &:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 6px;
+        top: 6px;
+        background-color: v.$colorOutline;
+        -webkit-transition: v.$durationLong1 v.$easingStandardDecelerate;
+        transition: v.$durationLong1 v.$easingStandardDecelerate;
+        border-radius: 50%;
+    }
+
+    &:hover {
+        &::before {
+            background-color: v.$colorOnSurfaceVariant;
+            outline: 4px;
+        }
+
+        &::after {
+            opacity: v.$stateHover;
+        }
+    }
+
+    &:active {
+        &::before {
+            left: 0;
+            top: 0;
+            height: 28px;
+            width: 28px;
+        }
+
+        &::after {
+            opacity: v.$statePressed;
+        }
+    }
+}
+
+input:checked + .slider {
+    background-color: v.$colorPrimary;
+    border: 2px solid v.$colorPrimary;
+
+    &:before {
+        -webkit-transform: translateX(20px);
+        -ms-transform: translateX(20px);
+        transform: translate(16px, -4px);
+        background-color: v.$colorOnPrimary;
+        height: 24px;
+        width: 24px;
+        content: "done";
+        text-align: center;
+        line-height: 24px;
+        font-family: v.$materialSymbols;
+    }
+
+    &:after {
+        -webkit-transform: translateX(20px);
+        -ms-transform: translateX(20px);
+        transform: translate(20px);
+    }
+
+    &:hover::before {
+        background-color: v.$colorPrimaryContainer;
+    }
+
+    &:active::before {
+        left: 4px;
+        top: 4px;
+        height: 28px;
+        width: 28px;
+        line-height: 28px;
+    }
+}
+
+/* PLACEHOLDER =================================================== */
+
+.plh-glow,
+.plh-wave {
+    flex-grow: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.plh-glow .plh::after {
+    @extend %before-show;
+    background-color: v.$colorOnTertiaryContainer;
+    animation: anim-plh-glow 0.7s v.$easingStandardDecelerate infinite alternate;
+}
+
+.plh-wave .plh::after {
+    @extend %before-show;
+    opacity: 0.2;
+    background-image: linear-gradient(0deg, v.$colorTertiaryContainer, v.$colorOnTertiaryContainer, v.$colorTertiaryContainer);
+    background-image: -moz-linear-gradient(
+        0deg,
+        v.$colorTertiaryContainer,
+        v.$colorOnTertiaryContainer,
+        v.$colorTertiaryContainer
+    );
+    background-image: -webkit-linear-gradient(
+        0deg,
+        v.$colorTertiaryContainer,
+        v.$colorOnTertiaryContainer,
+        v.$colorTertiaryContainer
+    );
+    animation: anim-plh-wave 1.5s v.$easingStandard infinite linear;
+}
+
+.plh {
+    background-color: v.$colorTertiaryContainer;
+    content: "";
+    font-size: inherit;
+    height: inherit;
+    display: flex;
+    border-radius: v.$cornerSmall;
+    overflow: hidden;
+    position: relative;
+
+    &::before {
+        content: "-";
+        color: transparent;
+        width: 0;
+        font-size: inherit;
+    }
+}
+
+/* TOOLTIPS ====================================================== */
+
+.tooltip {
+    position: relative;
+    top: 50%;
+    left: 0;
+
+    &:before {
+        content: attr(tooltip);
+        position: absolute;
+        bottom: -100%;
+        left: 50%;
+        padding: 4px 8px;
+        min-height: 12px;
+        transform: translateX(-50%) scale(0.8);
+        opacity: 0;
+        transition: all v.$durationMedium1 v.$easingStandardDecelerate;
+        transform-origin: top;
+        background: v.$colorOnSurfaceVariant;
+        color: v.$colorSurfaceVariant;
+        border-radius: 4px;
+        font-size: 10px;
+        line-height: 12px;
+        text-align: center;
+    }
+
+    &:hover:before {
+        transition: all v.$durationMedium1 v.$easingStandardDecelerate;
+        transition-delay: 1.5s;
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+    }
+}
+
+.disabled .tooltip:before {
+    display: none;
+}
+
+/* SNACKBAR =============================================== */
+
+.notification {
+    position: fixed;
+    width: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    row-gap: 8px;
+    bottom: 24px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.snackbar {
+    animation: snackbarShow v.$durationMedium1 v.$easingStandard;
+    grid-template-rows: 1fr;
+    display: grid;
+    z-index: 50;
+    background-color: v.$colorInverseSurface;
+    border-radius: v.$cornerExtraSmall;
+    min-height: 48px;
+    padding: 0 8px 0 16px;
+    min-width: 344px;
+    @include v.elevation(3);
+
+    &.fade {
+        animation: md-appear-backwards v.$durationMedium1 v.$easingStandard;
+        opacity: 0;
+    }
+
+    > div {
+        overflow: hidden;
+        color: v.$colorInverseOnSurface;
+        @extend .body-md;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-items: center;
+        animation: snackbarcontentShow v.$durationMedium2 v.$easingStandard;
+    }
+
+    span {
+        flex: 10;
+        color: v.$colorInverseOnSurface;
+    }
+
+    .button-text {
+        color: v.$colorInversePrimary;
+    }
+}
+
+/* CHECKBOX =================================================== */
+
+.radio {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin: 4px 0;
+    font-size: 16px;
+    line-height: 24px;
+    width: 100%;
+}
+
+input[type="radio"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 36px;
+    height: 20px;
+    opacity: 0;
+    z-index: 0;
+}
+
+.radiolabel {
+    display: block;
+    padding: 0 0 0 32px;
+    cursor: pointer;
+    color: v.$colorOnSurface;
+    width: 100%;
+
+    &:read-only,
+    &:disabled {
+        cursor: default;
+    }
+
+    &:before {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 16px;
+        height: 16px;
+        background-color: transparent;
+        outline: 2px solid v.$colorOnSurfaceVariant;
+        border-radius: 16px;
+        z-index: 1;
+        transition: outline-color v.$durationMedium2 v.$easingStandard;
+    }
+
+    &:after {
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        width: 8px;
+        height: 8px;
+        background-color: v.$colorPrimary;
+        border-radius: 50%;
+        z-index: 2;
+        transform: scale(0, 0);
+        transition: transform v.$durationMedium2 v.$easingStandard;
+    }
+}
+
+input[type="radio"]:checked + .radiolabel {
+    &:before {
+        outline-color: v.$colorPrimary;
+    }
+
+    &:after {
+        transform: scale(1, 1);
+    }
+}
+
+.expandable-card.expanded {
+    flex: 0 0 100%;
+}
+
+/* DISEÑO RESPONSIVO ============================================= */
+
+/* Pantallas Medianas (md) */
+@media only screen and (max-width: 1000px) {
+    .content {
+        margin-left: 88px;
+    }
+
+    .searcharea.morph {
+        position: fixed;
+        display: flex;
+        z-index: 11;
+        top: 64px;
+        flex-direction: column;
+        background-color: v.$colorSurfaceVariant;
+        border-radius: 0;
+        margin: 0 0 16px 0;
+        min-height: 64px;
+        width: calc(100% - 88px);
+        left: 0;
+        margin-left: 88px;
+        max-width: unset;
+
+        &:has(> .searchsuggestions.show) {
+            border-radius: 0 0 24px 24px;
+            overflow: hidden;
+        }
+
+        .searchbar {
+            height: 64px;
+            border-radius: 0;
+
+            + span {
+                margin-top: 64px;
+            }
+
+            .searchfield {
+                outline: none;
+                border: 0;
+                color: v.$colorOnSurface;
+                padding: 0 56px 0 64px;
+                height: 100%;
+            }
+
+            .button-trail {
+                right: 8px;
+                top: 8px;
+                height: 48px;
+                font-size: 24px;
+            }
+
+            [class*="button-"] {
+                border-radius: 0;
+                padding: 0 16px;
+            }
+
+            button[type="submit"] {
+                position: absolute;
+            }
+        }
+
+        + [class*="card-"] {
+            margin-top: 64px;
+        }
+
+        .searchsuggestions {
+            margin-top: 64px;
+        }
+    }
+
+    .panel #footer,
+    .button-fab + #footer {
+        margin-bottom: 72px;
+    }
+}
+
+/* Teléfonos móviles (sm) */
+@media only screen and (max-width: 700px) {
+    %before-show-sm {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        content: " ";
+        pointer-events: none;
+    }
+    .content {
+        margin-left: 0px;
+        overflow: overlay;
+        min-height: calc(100% - 64px - 80px);
+    }
+
+    .topbar .logo {
+        justify-content: left;
+    }
+
+    .panel {
+        #footer,
+        page-footer {
+            margin-bottom: 0;
+        }
+    }
+
+    .footer {
+        margin-bottom: 60px;
+    }
+
+    #footer {
+        margin-bottom: 60px;
+
+        &:after {
+            margin-bottom: 60px;
+        }
+    }
+
+    .notification {
+        bottom: 96px;
+    }
+
+    .searcharea.morph {
+        width: 100%;
+        left: 0;
+        margin-left: 0;
+    }
+
+    .searchbar {
+        padding: 0;
+    }
+
+    .dialog.fullscreen {
+        border-radius: 0;
+        min-width: unset;
+        max-width: unset;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        box-shadow: none;
+
+        .icon {
+            display: none;
+        }
+
+        .dialog-header {
+            height: 56px;
+            width: 65%;
+            line-height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0;
+            margin: 0 0 0 56px;
+
+            &::before {
+                content: "";
+                position: absolute;
+                height: 56px;
+                width: 100%;
+                top: 0;
+                left: 0;
+                display: block;
+                border-bottom: 1px solid v.$colorOutline;
+            }
+        }
+
+        .dialogcontent {
+            padding: 24px;
+        }
+
+        .buttonarea {
+            position: absolute;
+            top: -24px;
+            left: 0;
+            height: 56px;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0;
+        }
+
+        [class*="button-"] {
+            height: 100%;
+            border-radius: 0;
+            align-items: center;
+            padding: 0 24px;
+            background-color: transparent;
+            color: v.$colorPrimary !important;
+        }
+
+        #dialog-cancel {
+            display: flex;
+            height: 100%;
+            border-radius: 0;
+            align-items: center;
+            color: transparent !important;
+            width: 56px;
+
+            &::before {
+                @extend %before-show-sm;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-family: v.$materialSymbols;
+                font-size: 1.5em;
+                color: v.$colorOnSurface;
+                content: "clear";
+            }
+        }
+
+        [class*="button-"] {
+            &::after {
+                @extend %before-show-sm;
+                border-radius: 0;
+                align-items: center;
+            }
+
+            &:hover {
+                box-shadow: none;
+
+                &::after {
+                    background-color: v.$colorPrimary;
+                }
+            }
+        }
+    }
+}
+
+/* LOADING ANIMATION ==================================================================== */
+
+.skeleton {
+    animation: md-spinner v.$durationMedium2 v.$easingStandard infinite alternate;
+}

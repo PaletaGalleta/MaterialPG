@@ -1,0 +1,138 @@
+@use "variables" as v;
+
+.anim-cardappear {
+    animation: md-cardappear v.$durationMedium4 v.$easingStandardDecelerate;
+}
+
+@keyframes md-grow {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1, 1);
+        opacity: 1;
+    }
+}
+
+@keyframes md-midgrow {
+    0% {
+        transform: scale(0.6, 0.6);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1, 1);
+        opacity: 1;
+    }
+}
+
+@keyframes md-appear {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes md-appear-backwards {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes md-cardappear {
+    0% {
+        transform: translateY(10%);
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes rippleEffect {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(var(--scale));
+    }
+}
+
+@keyframes anim-plh-glow {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 0.1;
+    }
+}
+
+@keyframes anim-plh-wave {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes snackbarShow {
+    0% {
+        opacity: 0;
+        bottom: 0;
+        min-height: 0;
+        grid-template-rows: 0fr;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        bottom: 0;
+        grid-template-rows: 1fr;
+        min-height: 48px;
+    }
+}
+
+@keyframes snackbarcontentShow {
+    0% {
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes md-spinner {
+    0% {
+        background-color: v.$colorSurface;
+    }
+
+    100% {
+        background-color: v.$colorOnSurface;
+    }
+}

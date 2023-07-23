@@ -1,0 +1,68 @@
+.carrousel{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    overflow: hidden;
+    padding: 8px 16px;
+    width: 100%;
+    column-gap: 8px;
+    align-items: center;
+    height: 300px;
+
+}
+
+.carrouselimg{
+    border-radius: 28px;
+    overflow: hidden;
+    object-fit: cover;
+    flex: 0 0 0%;
+    position: relative;
+    height: 100%;
+    transition: all var(--md-sys-motion-duration-extra-long4) var(--md-sys-motion-easing-emphasized-decelerate);
+    cursor: pointer;
+}
+
+.carrouselimg.small{
+    flex-grow: 1;
+}
+
+.carrouselimg.medium{
+    flex-grow: 2;
+}
+
+.carrouselimg.large{
+    flex-grow: 8;
+}
+
+.carrouselimg img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+
+}
+
+.carrouselimg.large:hover img{
+    transform: scale(1.2);
+}
+
+.carrouselimg .itemtext{
+    background:black;
+    background: linear-gradient(0deg, black 35%, transparent 100%);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 36px 24px 24px 24px;
+    opacity: 0;
+       
+}
+
+.carrouselimg.large .itemtext{
+    opacity: 1;
+}
+
+.carrouselimg .itemtext span{
+    width: 100%;
+    -webkit-line-clamp: 2;
+    text-overflow: ellipsis;
+}

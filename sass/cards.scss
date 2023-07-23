@@ -1,0 +1,135 @@
+@use "variables" as v;
+
+.clickable {
+    cursor: pointer;
+    position: relative;
+    z-index: 8;
+    padding: 4px;
+
+    &::before {
+        @extend %before-show;
+        border-radius: 8px;
+        opacity: 0;
+        background-color: v.$colorPrimary;
+        transition: opacity v.$durationMedium1 v.$easingStandardDecelerate;
+    }
+
+    &:hover::before {
+        opacity: v.$stateHover;
+    }
+
+    &:focus::before {
+        opacity: v.$stateFocus;
+    }
+
+    &:active::before {
+        opacity: v.$statePressed;
+    }
+}
+
+// General
+[class*="card-"] {
+    border-radius: 12px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    animation: md-cardappear v.$durationMedium4 v.$easingStandardDecelerate;
+
+    &.fullheight {
+        height: 100%;
+    }
+
+    &.clickable {
+        &::before {
+            @extend %before-show;
+            border-radius: 12px;
+            opacity: 0;
+            background-color: v.$colorPrimary;
+            transition: opacity v.$durationMedium1 v.$easingStandardDecelerate;
+        }
+
+        &:hover::before {
+            opacity: v.$stateHover;
+        }
+
+        &:focus::before {
+            opacity: v.$stateFocus;
+        }
+
+        &:active::before {
+            opacity: v.$statePressed;
+        }
+    }
+}
+
+.cardcontent {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+}
+
+.card {
+    // Elevated
+    &-elevated {
+        background-color: v.$colorSurfaceContainerLow;
+        transition: none;
+        @include v.elevation(1);
+
+        &::before {
+            @extend %before-show;
+            z-index: 2;
+            border-radius: 12px;
+            opacity: 0.05;
+            background-color: v.$colorPrimary;
+            transition: none;
+        }
+    }
+
+    // Filled
+    &-filled {
+        background-color: v.$colorSurfaceContainerHighest;
+    }
+
+    // Filled Variant
+    &-filledvar {
+        background-color: v.$colorSurface;
+    }
+
+    // Outlined
+    &-outlined {
+        background-color: v.$colorSurface;
+        border: 1px solid v.$colorOutline;
+    }
+
+    &img {
+        background-color: v.$colorPrimaryContainer;
+        border-radius: 12px 12px 0 0;
+
+        img {
+            border-radius: inherit;
+        }
+    }
+}
+
+.emptycard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 8px 24px 8px;
+    color: v.$colorOnSurface;
+    row-gap: 4px;
+
+    .icon {
+        font-size: 72px;
+        opacity: 0.3;
+        font-variation-settings: "FILL" 0, "wght" 700, "opsz" 48;
+    }
+
+    span {
+        opacity: 0.5;
+        text-align: center;
+    }
+}

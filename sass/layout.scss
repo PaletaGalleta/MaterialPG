@@ -1,0 +1,507 @@
+@use "variables" as v;
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    // overflow: hidden;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+
+    &.noscroll {
+        overflow: hidden;
+    }
+}
+
+/***************************************************************************
+ * Wording Classes generator
+ **************************************************************************/
+@mixin gen-classes-word($prefix, $property, $values) {
+    @each $value in $values {
+        // Generate the "normal" class
+        .#{$prefix}-#{$value} {
+            #{$property}: $value;
+        }
+    }
+    @each $brKey, $brValue in v.$grid-breakpoints {
+        @media (min-width: $brValue) {
+            @each $value in $values {
+                // Generate the responsive classes
+                .#{$prefix}-#{$brKey}-#{$value} {
+                    #{$property}: $value;
+                }
+            }
+        }
+    }
+}
+
+/***************************************************************************
+ * Class generator by Number
+ **************************************************************************/
+@mixin gen-classes-num($prefix, $property, $important) {
+    @each $key, $value in v.$pixel-diff {
+        // Generate the "normal" class
+        .#{$prefix}-#{$key} {
+            @each $prop in $property {
+                @if $important == 0 {
+                    #{$prop}: $value;
+                }
+                @if $important == 1 {
+                    #{$prop}: $value !important;
+                }
+            }
+        }
+    }
+    @each $brKey, $brValue in v.$grid-breakpoints {
+        @media (min-width: $brValue) {
+            @each $key, $value in v.$pixel-diff {
+                // Generate the responsive classes
+                .#{$prefix}-#{$brKey}-#{$key} {
+                    @each $prop in $property {
+                        @if $important == 0 {
+                            #{$prop}: $value;
+                        }
+                        @if $important == 1 {
+                            #{$prop}: $value !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/***************************************************************************
+ * Containers
+ **************************************************************************/
+@mixin gen-container-classes() {
+    @each $key, $value in v.$grid-breakpoints {
+        .container-#{$key} {
+            max-width: 100%;
+            margin-right: auto;
+            margin-left: auto;
+            @each $bKey, $bValue in v.$grid-breakpoints {
+                @if $bValue > $value {
+                    @media (min-width: $bValue) {
+                        max-width: map-get(v.$container-sizes, $bKey);
+                    }
+                }
+            }
+        }
+    }
+
+    .container-fluid {
+        width: 100%;
+    }
+}
+
+// Generate classes for display types
+@include gen-container-classes();
+
+/***************************************************************************
+ * Position Classes
+ **************************************************************************/
+@include gen-classes-word("pos", "position", v.$pos-types);
+
+/***************************************************************************
+ * Display Classes
+ **************************************************************************/
+@include gen-classes-word("d", "display", v.$display-types);
+
+.flexh {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.flexv {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-align-items-center {
+    align-items: center !important;
+}
+
+.flex-gr-1 {
+    flex: 1;
+}
+
+.pe-none {
+    pointer-events: none !important;
+}
+
+/***************************************************************************
+ * Rows
+ **************************************************************************/
+.row {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 8px;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/***************************************************************************
+ * Columns
+ **************************************************************************/
+[class*="col"] {
+    float: left;
+    min-height: 1px;
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+}
+
+@mixin gen-columns($prefix, $column-counts) {
+    // Generate the "normal" ones
+    .#{$prefix} {
+        flex-basis: 1;
+    }
+    .#{$prefix}-auto {
+        max-width: fit-content;
+    }
+    @for $i from 1 through v.$column-count {
+        .#{$prefix}-#{$i} {
+            flex-basis: percentage(calc(1 / calc(v.$column-count / $i)));
+            max-width: percentage(calc(1 / calc(v.$column-count / $i)));
+        }
+    }
+    // Generate the responsive ones
+    @each $key, $value in $column-counts {
+        @media (min-width: map-get(v.$grid-breakpoints, $key)) {
+            .#{$prefix}-#{$key} {
+                flex-basis: 1;
+            }
+            .#{$prefix}-#{$key}-auto {
+                max-width: fit-content;
+            }
+            @for $i from 1 through $value {
+                .#{$prefix}-#{$key}-#{$i} {
+                    flex-basis: percentage(calc(1 / calc($value / $i)));
+                    max-width: percentage(calc(1 / calc($value / $i)));
+                }
+            }
+        }
+    }
+}
+
+// Generate classes for columns
+@include gen-columns("col", v.$column-counts);
+
+/***************************************************************************
+ * Column Gap Classes
+ **************************************************************************/
+@include gen-classes-num("column-gap", "column-gap", 0);
+
+/***************************************************************************
+ * Column Gap Classes
+ **************************************************************************/
+@include gen-classes-num("row-gap", "row-gap", 0);
+
+/***************************************************************************
+* All Gap Classes
+**************************************************************************/
+@include gen-classes-num("gap", ("column-gap", "row-gap"), 0);
+
+/***************************************************************************
+* Padding Classes
+**************************************************************************/
+@include gen-classes-num("p", "padding", 1);
+@include gen-classes-num("pt", "padding-top", 1);
+@include gen-classes-num("pb", "padding-bottom", 1);
+@include gen-classes-num("pr", "padding-right", 1);
+@include gen-classes-num("pl", "padding-left", 1);
+@include gen-classes-num("py", ("padding-top", "padding-bottom"), 1);
+@include gen-classes-num("px", ("padding-right", "padding-left"), 1);
+
+/***************************************************************************
+* Margin Classes
+**************************************************************************/
+@include gen-classes-num("m", "margin", 1);
+@include gen-classes-num("mt", "margin-top", 1);
+@include gen-classes-num("mb", "margin-bottom", 1);
+@include gen-classes-num("mr", "margin-right", 1);
+@include gen-classes-num("ml", "margin-left", 1);
+@include gen-classes-num("my", ("margin-top", "margin-bottom"), 1);
+@include gen-classes-num("mx", ("margin-right", "margin-left"), 1);
+
+/***************************************************************************
+* Border Radius Classes
+**************************************************************************/
+@include gen-classes-num("br", "border-radius", 1);
+// @include gen-classes-word("corner", "border-radius", v.$corners);
+
+.fullheight {
+    height: 100%;
+}
+
+.fullwidth {
+    width: 100%;
+}
+
+.fullsize {
+    height: 100%;
+    width: 100%;
+}
+
+.overlay {
+    position: absolute;
+}
+
+.vertical-flex,
+.flex-v {
+    display: flex;
+    flex-direction: column !important;
+}
+.flex-h {
+    display: flex;
+    flex-direction: row !important;
+}
+.flex-wrap {
+    flex-wrap: wrap !important;
+}
+.flex-nowrap {
+    flex-wrap: nowrap !important;
+}
+
+.flex-justify-center {
+    justify-content: center !important;
+}
+.flex-justify-end {
+    justify-content: flex-end !important;
+}
+.flex-align-center {
+    align-items: center !important;
+}
+.flex-align-end {
+    align-items: flex-end !important;
+}
+
+.border {
+    border: 1px solid var(--md-sys-color-outline);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-normal {
+    font-family: "Roboto Flex", sans-serif !important;
+    font-size: inherit !important;
+}
+
+[class*="bg-"] span {
+    color: var(--md-sys-color-background);
+    font-size: 0.875em;
+}
+.bg-green {
+    background-color: var(--md-custom-color-good);
+}
+.bg-yellow {
+    background-color: var(--md-custom-color-warning) !important;
+}
+.bg-error {
+    background-color: var(--md-sys-color-error) !important;
+}
+.bg-color-inverse {
+    background-color: var(--md-sys-color-on-primary) !important;
+}
+.wrap {
+    white-space: pre-wrap !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Basado en paneles
+ - Dos paneles
+ - En pantallas grandes van lado a lado
+ - En pantallas pequeñas va una u otra
+*/
+.twopanel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 88px;
+    overflow: hidden;
+}
+.panelcontainer {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 58px;
+    margin-top: 64px;
+}
+.panelcontainer .panel {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px;
+    transition: transform var(--md-sys-motion-duration-long3) var(--md-sys-motion-easing-emphasized-decelerate),
+        opacity var(--md-sys-motion-duration-medium3) var(--md-sys-motion-easing-emphasized-decelerate);
+}
+
+/* Pantallas Pequeñas (md) */
+@media only screen and (max-width: 1000px) {
+    .panelcontainer .panel {
+        opacity: 1;
+        /* z-index: ; */
+    }
+
+    .panelcontainer .panel[hidden] {
+        opacity: 0;
+        pointer-events: none;
+        /* display: none; */
+        /* transform: translateX(0); */
+    }
+
+    .panelcontainer .panel#panel1[hidden] {
+        /* display: none; */
+        transform: translateX(-30%);
+    }
+
+    .panelcontainer .panel#panel2[hidden] {
+        /* display: none; */
+        transform: translateX(-70%);
+    }
+
+    .panelcontainer .panel#panel2:not([hidden]) {
+        /* display: none; */
+        transform: translateX(-100%);
+    }
+}
+
+/* Teléfonos móviles (sm) */
+@media only screen and (max-width: 700px) {
+    .twopanel {
+        margin-left: 0;
+    }
+    .panelcontainer {
+        padding-bottom: 144px;
+    }
+}
+
+form {
+    margin: 0;
+}
+
+.center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.centerverthor {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.g-recaptcha {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 8px 0 16px;
+}
+
+.anim-spin:hover {
+    transform: rotate(10deg);
+}
+.anim-scale:hover {
+    transform: scale(0.9);
+}
+
+.spinner {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 12.8px solid var(--md-sys-color-secondary);
+    animation: spinner-bulqg1 0.8s infinite linear alternate, spinner-oaa3wk 1.6s infinite linear;
+}
+
+.minispinner {
+    padding: 5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 4px solid var(--md-sys-color-secondary);
+    animation: spinner-bulqg1 0.8s infinite linear alternate, spinner-oaa3wk 1.6s infinite linear;
+}
+
+@keyframes spinner-bulqg1 {
+    0% {
+        clip-path: polygon(50% 50%, 0 0, 50% 0%, 50% 0%, 50% 0%, 50% 0%, 50% 0%);
+    }
+
+    12.5% {
+        clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 0%, 100% 0%, 100% 0%);
+    }
+
+    25% {
+        clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 100% 100%, 100% 100%);
+    }
+
+    50% {
+        clip-path: polygon(50% 50%, 0 0, 50% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%);
+    }
+
+    62.5% {
+        clip-path: polygon(50% 50%, 100% 0, 100% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%);
+    }
+
+    75% {
+        clip-path: polygon(50% 50%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 50% 100%, 0% 100%);
+    }
+
+    100% {
+        clip-path: polygon(50% 50%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 50% 100%, 0% 100%);
+    }
+}
+
+@keyframes spinner-oaa3wk {
+    0% {
+        transform: scaleY(1) rotate(0deg);
+    }
+
+    49.99% {
+        transform: scaleY(1) rotate(135deg);
+    }
+
+    50% {
+        transform: scaleY(-1) rotate(0deg);
+    }
+
+    100% {
+        transform: scaleY(-1) rotate(-135deg);
+    }
+}
+
+#map-canvas {
+    height: 500px;
+}
+
+.anim-none {
+    -moz-transition: none !important;
+    -webkit-transition: none !important;
+    -o-transition: all 0s ease !important;
+    transition: none !important;
+}
+
+/* 000Webhost */
+a[href="https://www.000webhost.com/?utm_source=000webhostapp&amp;utm_campaign=000_logo&amp;utm_medium=website&amp;utm_content=footer_img"],
+img[src="https://cdn.000webhost.com/000webhost/logo/footer-powered-by-000webhost-white2.png"]
+{
+    display: none !important;
+}

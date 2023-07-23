@@ -1,0 +1,217 @@
+@use "variables" as v;
+
+.chipcontainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 1px 0 1px;
+    overflow-x: auto;
+}
+
+.Chip {
+    $assist: #{&}-assist;
+    $filter: #{&}-filter;
+    $input: #{&}-input;
+    $suggestion: #{&}-suggestion;
+    $badge: #{&}-badge;
+
+    display: flex;
+    position: relative;
+    @extend .label-lg;
+    user-select: none;
+
+    border-radius: 8px;
+    overflow: hidden;
+    height: 32px;
+    padding: 0 16px 0 8px;
+    cursor: pointer;
+    width: fit-content;
+    align-items: center;
+    column-gap: 8px;
+    transition: all v.$durationShort4 v.$easingStandardDecelerate;
+
+    &.outlined {
+        outline: 1px solid v.$colorOutline;
+
+        &:hover,
+        &:focus {
+            @include v.elevation(1);
+        }
+
+        &:active {
+            box-shadow: none;
+        }
+
+        &.selected {
+            outline: none;
+        }
+    }
+
+    &.elevated {
+        @include v.elevation(1);
+        background-color: v.$colorSurfaceContainerLow;
+
+        &:hover,
+        &:focus {
+            @include v.elevation(2);
+        }
+
+        &:active {
+            @include v.elevation(1);
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &.selected {
+            @include v.elevation(1);
+
+            &:hover,
+            &:focus {
+                @include v.elevation(2);
+            }
+
+            &:active {
+                @include v.elevation(1);
+            }
+
+            &.disabled {
+                box-shadow: none;
+            }
+        }
+
+        &.disabled {
+            box-shadow: none;
+            color: rgba(v.$colorOnSurface, v.$stateDisabledContent);
+
+            &::before {
+                color: v.$colorOnSurface;
+            }
+        }
+    }
+
+    &.disabled {
+        opacity: v.$stateDisabledContainer;
+    }
+
+    &::before {
+        font-family: v.$materialSymbols;
+        color: v.$colorOnSurfaceVariant;
+        font-size: 18px;
+        line-height: 32px;
+        content: attr(data-icon);
+        max-width: 32px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+    }
+
+    &::after {
+        @extend %before-show;
+        background-color: v.$colorOnSurfaceVariant;
+        opacity: 0;
+    }
+
+    &:hover {
+        &::after {
+            opacity: v.$stateHover;
+        }
+    }
+
+    &:focus {
+        &::after {
+            opacity: v.$stateFocus;
+        }
+    }
+
+    &:active {
+        &::after {
+            opacity: v.$statePressed;
+        }
+    }
+
+    &#{$assist} {
+        &::before {
+            color: v.$colorPrimary;
+        }
+    }
+
+    &#{$filter} {
+        color: v.$colorOnSurfaceVariant;
+
+        &::before {
+            content: "done";
+            max-width: 0;
+            transition: max-width v.$durationMedium2 v.$easingStandardAccelerate;
+        }
+
+        &:hover::before,
+        &:focus::before {
+            color: v.$colorOnSurfaceVariant;
+        }
+
+        &.selected {
+            background-color: v.$colorSecondaryContainer;
+            color: v.$colorOnSecondaryContainer;
+
+            &::before {
+                max-width: 32px;
+                color: v.$colorOnSecondaryContainer;
+            }
+
+            &::after {
+                color: v.$colorOnSecondaryContainer;
+            }
+
+            &:hover {
+                color: v.$colorOnSecondaryContainer;
+
+                &::before {
+                    color: v.$colorOnSecondaryContainer;
+                }
+
+                &::after {
+                    opacity: v.$stateHover;
+                }
+            }
+        }
+    }
+
+    &#{$badge} {
+        pointer-events: none;
+        background-color: v.$colorSurfaceContainerLow;
+
+        &.green {
+            background-color: v.$colorGreenContainer;
+            color: v.$colorOnGreenContainer;
+
+            &::before {
+                color: v.$colorOnGreenContainer;
+            }
+        }
+
+        &.yellow {
+            background-color: v.$colorYellowContainer;
+            color: v.$colorOnYellowContainer;
+
+            &::before {
+                color: v.$colorOnYellowContainer;
+            }
+        }
+
+        &.red {
+            background-color: v.$colorErrorContainer;
+            color: v.$colorOnErrorContainer;
+
+            &::before {
+                color: v.$colorOnErrorContainer;
+            }
+        }
+
+        &.disabled {
+            opacity: v.$stateDisabledContainer;
+        }
+    }
+}

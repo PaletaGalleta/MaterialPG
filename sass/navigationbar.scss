@@ -1,0 +1,190 @@
+@use "variables" as v;
+
+.navbar {
+    display: flex;
+    position: fixed;
+    background-color: v.$colorSurfaceContainer;
+    float: left;
+    height: 100%;
+    min-width: 64px;
+    width: 88px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    row-gap: 8px;
+    z-index: 17;
+    @include v.elevation(2);
+
+    @media #{v.$mediaSM} {
+        width: 100%;
+        bottom: 0;
+        padding: 0 8px;
+        height: 80px;
+        min-height: 48px;
+        align-items: flex-end;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-content: stretch;
+        column-gap: 8px;
+    }
+
+    .item {
+        min-height: 48px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 12px 8px 12px;
+        row-gap: 4px;
+        cursor: pointer;
+        z-index: 10;
+        user-select: none;
+
+        &:hover {
+            > .icon {
+                font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+
+                &::after {
+                    opacity: v.$stateHover;
+                }
+            }
+        }
+
+        &:focus-visible {
+            outline: none;
+        }
+
+        &:focus > .icon::after {
+            opacity: v.$stateFocus;
+        }
+
+        &:active > .icon::after {
+            opacity: v.$statePressed;
+        }
+
+        @media #{v.$mediaSM} {
+            margin-bottom: 0;
+            width: 100%;
+            padding: 12px 0 16px 0;
+            flex-grow: 10;
+        }
+
+        > .icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 64px;
+            height: 32px;
+            color: v.$colorOnSurfaceVariant;
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            border-radius: 16px;
+            font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
+            transition: font-variation-settings v.$durationShort3 v.$easingStandardDecelerate;
+
+            &::after {
+                @extend %before-show;
+                border-radius: inherit;
+                background-color: v.$colorOnSurfaceVariant;
+                opacity: 0;
+                transition: opacity v.$durationShort3 v.$easingStandard;
+            }
+        }
+
+        > .label {
+            font-family: "Roboto Flex Medium", sans-serif;
+            line-height: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: v.$colorOnSurfaceVariant;
+        }
+
+        &.enabled {
+            > .icon {
+                background-color: v.$colorSecondaryContainer;
+                color: v.$colorOnSecondaryContainer;
+                font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+
+                &::after {
+                    background-color: v.$colorOnSurface;
+                }
+            }
+
+            > .label {
+                color: v.$colorOnSurface;
+            }
+        }
+    }
+
+    .subnav {
+        display: flex;
+        width: 100%;
+
+        > .subnav-content {
+            display: grid;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            padding-left: 88px;
+            height: 100%;
+            grid-template-columns: 0fr;
+            transition: grid-template-columns v.$durationMedium3 v.$easingEmphasizedDecelerate;
+
+            @media #{v.$mediaSM} {
+                transition: all v.$durationMedium3 v.$easingEmphasizedDecelerate;
+                padding-left: 0;
+                padding-bottom: 0px;
+                height: 80px;
+                width: 100%;
+                grid-template-columns: unset;
+                grid-template-rows: 0fr;
+            }
+
+            > div {
+                display: flex;
+                border-radius: 0 12px 12px 0;
+                flex-direction: column;
+                row-gap: 8px;
+                justify-content: center;
+                overflow: hidden;
+                border-left: 1px solid v.$colorSurfaceVariant;
+
+                @media #{v.$mediaSM} {
+                    border-radius: 12px 12px 0 0;
+                    flex-direction: row;
+                    justify-content: space-evenly;
+                    align-items: flex-end;
+                    bottom: 0;
+                    border-bottom: 1px solid v.$colorSurfaceVariant;
+                }
+            }
+        }
+
+        &:focus > .subnav-content,
+        &:focus-within > .subnav-content,
+        &:hover > .subnav-content {
+            grid-template-columns: 1fr;
+            border-radius: 0 12px 12px 0;
+            @include v.elevation(2);
+            background-color: v.$colorSurfaceContainer;
+            height: 100%;
+            padding-left: 88px;
+
+            @media #{v.$mediaSM} {
+                grid-template-columns: unset;
+                grid-template-rows: 1fr;
+                border-radius: 12px 12px 0 0;
+                padding-left: 0;
+                padding-bottom: 80px;
+                width: 100%;
+                height: 160px;
+                bottom: 0;
+                border-left: 0;
+            }
+        }
+    }
+}

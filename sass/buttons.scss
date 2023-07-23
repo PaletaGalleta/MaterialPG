@@ -1,0 +1,397 @@
+@use "variables" as v;
+
+/* BUTTON ======================================================= */
+
+/* General */
+[class*="button-"] {
+    display: flex;
+    min-width: 48px;
+    height: 40px;
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all v.$durationMedium2 v.$easingStandardDecelerate;
+    overflow: hidden;
+    position: relative;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
+    @extend .label-lg;
+    padding: 0 24px 0 16px;
+
+    &:focus {
+        transition: all v.$durationMedium2 v.$easingStandardDecelerate;
+        outline: none;
+    }
+
+    &.disabled {
+        opacity: v.$stateDisabledContent;
+        pointer-events: none;
+
+        &::after {
+            opacity: v.$stateDisabledContainer;
+        }
+    }
+
+    &::after {
+        @extend %before-show;
+        border-radius: 20px;
+        transition: opacity v.$durationMedium2 v.$easingStandardDecelerate;
+        opacity: 0;
+    }
+
+    &:hover::after {
+        opacity: v.$stateHover;
+    }
+
+    &:focus::after {
+        opacity: v.$stateFocus;
+    }
+
+    &:active::after {
+        opacity: v.$statePressed;
+    }
+
+    > .icon {
+        font-variation-settings: "FILL" 1, "wght" 300, "opsz" 24;
+        font-size: 18px;
+        margin-right: 8px;
+    }
+}
+
+.button {
+    // Elevated
+    &-elevated {
+        border: 0;
+        background-color: v.$colorSurface;
+        color: v.$colorPrimary !important;
+        @include v.elevation(1);
+
+        &:hover {
+            @include v.elevation(2);
+        }
+
+        &:focus,
+        &:active {
+            @include v.elevation(1);
+        }
+
+        &::after {
+            background-color: v.$colorPrimary;
+        }
+
+        &:not(:has(.icon)) {
+            padding-left: 24px;
+        }
+    }
+
+    // Filled
+    &-filled {
+        border: 0;
+        background-color: v.$colorPrimary;
+        color: v.$colorOnPrimary !important;
+
+        &:hover {
+            color: v.$colorOnPrimary;
+            @include v.elevation(1);
+        }
+
+        &:active,
+        &:focus {
+            box-shadow: none;
+        }
+
+        &::after {
+            background-color: v.$colorOnPrimary;
+        }
+
+        &:not(:has(.icon)) {
+            padding-left: 24px;
+        }
+    }
+
+    // Tonal
+    &-tonal {
+        border: 0;
+        background-color: v.$colorSecondaryContainer;
+        color: v.$colorOnSecondaryContainer;
+
+        &:hover {
+            color: v.$colorOnSecondaryContainer;
+            @include v.elevation(1);
+        }
+
+        &:active,
+        &:focus {
+            color: v.$colorOnSecondaryContainer;
+            box-shadow: none;
+        }
+
+        &::after {
+            background-color: v.$colorOnSecondaryContainer;
+        }
+
+        &:not(:has(.icon)) {
+            padding-left: 24px;
+        }
+    }
+    // Outlined
+    &-outlined {
+        border: 0;
+        color: v.$colorPrimary !important;
+        outline: 1px solid v.$colorOutline;
+
+        &.disabled {
+            background-color: transparent;
+            color: v.$colorOnSurface;
+        }
+
+        &:focus {
+            outline: 1px solid v.$colorPrimary;
+        }
+
+        &::after {
+            background-color: v.$colorPrimary;
+        }
+
+        &.error {
+            color: v.$colorError !important;
+            outline: 1px solid v.$colorError;
+
+            &::after {
+                background-color: v.$colorError;
+            }
+        }
+        &:not(:has(.icon)) {
+            padding-left: 24px;
+        }
+    }
+
+    // Text
+    &-text {
+        border: 0;
+        background-color: transparent;
+        padding: 0 12px;
+        color: v.$colorPrimary;
+
+        &:hover {
+            color: v.$colorPrimary;
+        }
+
+        &.disabled {
+            color: v.$colorOnSurface;
+        }
+
+        &::after {
+            background-color: v.$colorPrimary;
+        }
+
+        &:not(:has(.icon)) {
+            padding-left: 12px;
+        }
+    }
+
+    &-fab {
+        display: none;
+        position: fixed;
+        z-index: 10;
+        width: 96px;
+        height: 96px;
+        background-color: v.$colorTertiaryContainer;
+        color: v.$colorOnTertiaryContainer;
+        @include v.elevation(3);
+        bottom: 16px;
+        right: 16px;
+        font-size: 36px;
+        font-family: v.$materialSymbols;
+        border-radius: 28px;
+        animation-name: md-grow v.$durationMedium4 v.$easingEmphasizedDecelerate;
+        padding: 0;
+
+        &.active {
+            display: flex;
+        }
+
+        &:hover {
+            @include v.elevation(4);
+        }
+
+        &:focus {
+            @include v.elevation(3);
+        }
+
+        &:active {
+            @include v.elevation(3);
+        }
+
+        &::after {
+            @extend %before-show;
+            background-color: v.$colorOnTertiaryContainer;
+            opacity: 0;
+            border-radius: 28px;
+        }
+
+        &:hover::after {
+            opacity: v.$stateHover;
+        }
+
+        &:focus::after {
+            opacity: v.$stateFocus;
+        }
+
+        &:active::after {
+            opacity: v.$statePressed;
+        }
+
+        @media #{v.$mediaMD} {
+            display: flex;
+        }
+
+        @media #{v.$mediaSM} {
+            display: flex;
+            width: 56px;
+            height: 56px;
+            font-size: 24px;
+            border-radius: 16px;
+
+            &::after {
+                border-radius: 16px;
+            }
+        }
+    }
+
+    &-trail {
+        position: absolute;
+        right: 0;
+        height: inherit;
+        font-size: 24px;
+        line-height: 48px !important;
+        color: v.$colorOnSurface;
+        opacity: 0.5;
+        border-radius: 50%;
+
+        &:hover {
+            color: v.$colorOnSurface;
+            opacity: 1;
+        }
+    }
+}
+
+.ripple {
+    width: 2px;
+    height: 2px;
+    position: absolute;
+    border-radius: 50%;
+    background-color: v.$colorInverseSurface;
+    animation: rippleEffect 0.5s v.$easingStandardDecelerate;
+    opacity: v.$statePressed;
+    z-index: 1;
+    pointer-events: none;
+    transition: all v.$durationLong1 v.$easingStandard;
+}
+
+[class*="button-icon-"] {
+    position: relative;
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    border-radius: 20px;
+    font-family: v.$materialSymbols;
+    font-size: 24px;
+    line-height: 40px;
+    padding: 0;
+    font-variation-settings: "FILL" 0, "wght" 500, "opsz" 24;
+    cursor: pointer;
+    text-align: center;
+    color: v.$colorOnSurfaceVariant;
+
+    [data-theme="dark"] & {
+        font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
+    }
+}
+
+.button-icon {
+    &-filled {
+        color: v.$colorPrimary;
+        background-color: v.$colorSurfaceVariant;
+
+        &::after {
+            background-color: v.$colorOnSurfaceVariant;
+        }
+
+        &.selected {
+            color: v.$colorOnPrimary;
+            outline: none;
+            background-color: v.$colorPrimary;
+            font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+
+            &::after {
+                background-color: v.$colorInverseOnSurface;
+            }
+        }
+    }
+
+    &-elevated {
+        color: v.$colorPrimary;
+        background-color: v.$colorSurfaceVariant;
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
+        &::after {
+            background-color: v.$colorOnSurfaceVariant;
+        }
+
+        &.selected {
+            color: v.$colorOnPrimary;
+            outline: none;
+            background-color: v.$colorPrimary;
+            font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+
+            &::after {
+                background-color: v.$colorInverseOnSurface;
+            }
+        }
+    }
+
+    &-outlined {
+        outline: 1px solid v.$colorOutline;
+
+        &::after {
+            background-color: v.$colorOnSurfaceVariant;
+        }
+
+        &.selected {
+            color: v.$colorInverseOnSurface;
+            outline: none;
+            background-color: v.$colorInverseSurface;
+
+            &::after {
+                background-color: v.$colorInverseOnSurface;
+            }
+        }
+    }
+
+    &-text {
+        &::after {
+            background-color: v.$colorOnSurfaceVariant;
+        }
+
+        &.selected {
+            color: v.$colorPrimary;
+            font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+
+            [data-theme="dark"] & {
+                font-variation-settings: "FILL" 1, "wght" 300, "opsz" 24;
+            }
+        }
+    }
+}
+
+.buttonarea {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
