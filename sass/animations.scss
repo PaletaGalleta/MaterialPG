@@ -1,7 +1,9 @@
-@use "variables" as v;
+.anim-none {
+    animation: none !important;
+}
 
-.anim-cardappear {
-    animation: md-cardappear v.$durationMedium4 v.$easingStandardDecelerate;
+.anim-grow {
+    animation: md-grow v.$durationMedium4 v.$easingStandardDecelerate;
 }
 
 @keyframes md-grow {
@@ -28,6 +30,10 @@
     }
 }
 
+.anim-appear {
+    animation: md-appear v.$durationMedium4 v.$easingStandardDecelerate;
+}
+
 @keyframes md-appear {
     0% {
         opacity: 0;
@@ -48,9 +54,32 @@
     }
 }
 
+.anim-cardappear {
+    animation: md-cardappear v.$durationMedium4 v.$easingStandardDecelerate;
+}
+
 @keyframes md-cardappear {
     0% {
         transform: translateY(10%);
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.anim-forward {
+    animation: md-forward v.$durationXLong3 v.$easingEmphasizedDecelerate;
+}
+
+@keyframes md-forward {
+    0% {
+        transform: translateX(-10%);
         opacity: 0;
     }
 

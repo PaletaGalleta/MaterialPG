@@ -1,0 +1,29 @@
+p {
+    @extend .body-md;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: initial;
+    word-wrap: break-word;
+}
+
+.text-center {
+    text-align: center;
+}
+.text-start {
+    text-align: start;
+}
+.text-end {
+    text-align: end;
+}
+.text-justify {
+    text-align: justify;
+}
+
+.text-normal {
+    font-family: "Roboto Flex", sans-serif !important;
+    font-size: inherit !important;
+}
+
+.text-bold {
+    font-weight: 700;
+}

@@ -33,9 +33,13 @@ $container-sizes: (
     xxl: 1320px,
 );
 
-$display-types: (block, inline, inline-block, flex, none);
+$display-types: (block, inline, inline-block, flex, none, table-cell);
 
 $pos-types: (relative, fixed, absolute, static, sticky);
+
+$pos-places: (top, left, right, bottom);
+
+$pos-values: (0, 25%, 50%, 75%, 100%);
 
 $column-counts: (
     xs: 4,
@@ -53,6 +57,14 @@ $pixel-diff: (
     2: 8px,
     3: 12px,
     4: 16px,
+);
+
+$percentage-types: (
+    0: 0,
+    25: 25%,
+    50: 50%,
+    75: 75%,
+    100: 100%,
 );
 
 /* Colors */
@@ -103,6 +115,10 @@ $colorYellow: var(--md-custom-color-yellow);
 $colorOnYellow: var(--md-custom-color-on-yellow);
 $colorYellowContainer: var(--md-custom-color-yellow-container);
 $colorOnYellowContainer: var(--md-custom-color-on-yellow-container);
+
+$colorScrim: var(--md-ref-palette-neutral-variant20);
+
+$filterOnPrimaryContainer: var(--md-sys-filter-on-primary-container);
 
 /* Corners */
 $cornerNone: 0px;
@@ -263,4 +279,36 @@ $ambient-shadow-map: (
 @mixin elevation($elevation) {
     box-shadow: map-get($key-shadow-umbra-map, $elevation), map-get($key-shadow-penumbra-map, $elevation),
         map-get($ambient-shadow-map, $elevation);
+}
+
+%icon {
+    font-family: $materialSymbols !important;
+    display: inline-block;
+    vertical-align: bottom;
+    font-variation-settings: "FILL" 0, "wght" 500, "opsz" 24;
+    line-height: inherit;
+
+    &.color {
+        color: $colorPrimary;
+    }
+
+    &.big {
+        font-variation-settings: "FILL" 0, "wght" 500, "opsz" 48 !important;
+
+        [data-theme="dark"] & {
+            font-variation-settings: "FILL" 0, "wght" 400, "opsz" 48 !important;
+        }
+    }
+
+    &.filled {
+        font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
+
+        [data-theme="dark"] & {
+            font-variation-settings: "FILL" 1, "wght" 300, "opsz" 24 !important;
+        }
+    }
+
+    [data-theme="dark"] & {
+        font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
+    }
 }

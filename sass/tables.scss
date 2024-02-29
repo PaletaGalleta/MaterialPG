@@ -1,0 +1,106 @@
+/* TABLA ====================================================== */
+
+table {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    // border: 1px solid v.$colorOutline;
+    border-spacing: 1px;
+    text-align: start;
+    border-collapse: collapse;
+}
+
+thead {
+    min-height: 56px;
+    border-bottom: 1px solid v.$colorOutline;
+
+    .table-sm & {
+        min-height: 36px;
+    }
+}
+
+tr {
+    min-height: 52px;
+    border-bottom: 1px solid v.$colorOutline;
+    overflow: hidden;
+
+    .table-sm & {
+        min-height: 36px;
+    }
+}
+
+tr:first-child {
+    border-top: none;
+}
+tr:last-child {
+    border-bottom: none;
+}
+
+td {
+    padding: 6px 16px;
+    color: v.$colorOnSurface;
+    margin: 0;
+    overflow: hidden;
+
+    &.tcenter {
+        text-align: center;
+    }
+}
+
+th {
+    padding: 6px 16px;
+    height: 56px;
+    color: v.$colorOnSurface;
+    text-align: start;
+    overflow: hidden;
+    font-weight: 600;
+    @extend .body-lg;
+
+    .table-sm & {
+        height: 36px;
+    }
+}
+
+.table {
+    &-striped {
+        & tbody tr:nth-child(odd) {
+            background-color: rgba(0, 0, 0, 0.08);
+
+            [data-theme="dark"] & {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+        }
+    }
+
+    &-hover {
+        & tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.15);
+
+            [data-theme="dark"] & {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+    }
+
+    &-select {
+        & tbody tr {
+            cursor: pointer;
+
+            &:active {
+                background-color: rgba(0, 0, 0, 0.18);
+
+                [data-theme="dark"] & {
+                    background-color: rgba(255, 255, 255, 0.12);
+                }
+            }
+        }
+    }
+
+    &-cell {
+        &-nowrap {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}

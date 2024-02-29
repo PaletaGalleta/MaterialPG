@@ -1,22 +1,26 @@
-@use "variables" as v;
-
 * {
     box-sizing: border-box;
 }
 
 html {
     height: 100%;
-    // overflow: hidden;
 }
 
 body {
     padding: 0;
     margin: 0;
-    height: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
 
     &.noscroll {
         overflow: hidden;
     }
+}
+
+.content {
+    flex: 1;
 }
 
 /***************************************************************************
@@ -26,7 +30,7 @@ body {
     @each $value in $values {
         // Generate the "normal" class
         .#{$prefix}-#{$value} {
-            #{$property}: $value;
+            #{$property}: $value !important;
         }
     }
     @each $brKey, $brValue in v.$grid-breakpoints {
@@ -34,7 +38,7 @@ body {
             @each $value in $values {
                 // Generate the responsive classes
                 .#{$prefix}-#{$brKey}-#{$value} {
-                    #{$property}: $value;
+                    #{$property}: $value !important;
                 }
             }
         }
@@ -83,6 +87,7 @@ body {
 @mixin gen-container-classes() {
     @each $key, $value in v.$grid-breakpoints {
         .container-#{$key} {
+            width: 100%;
             max-width: 100%;
             margin-right: auto;
             margin-left: auto;
@@ -116,7 +121,7 @@ body {
 
 .flexh {
     display: flex;
-    flex-direction: row;
+    flex-direction: row !important;
     align-items: center;
 }
 .flexv {
@@ -156,33 +161,38 @@ body {
 /***************************************************************************
  * Columns
  **************************************************************************/
-[class*="col"] {
+
+%colSettings {
     float: left;
     min-height: 1px;
     display: flex;
     flex-direction: column;
     padding: 6px;
+    max-width: 100%;
 }
 
 @mixin gen-columns($prefix, $column-counts) {
     // Generate the "normal" ones
     .#{$prefix} {
-        flex-basis: 1;
+        flex: 1;
+        @extend %colSettings;
     }
     .#{$prefix}-auto {
         max-width: fit-content;
+        @extend %colSettings;
     }
     @for $i from 1 through v.$column-count {
         .#{$prefix}-#{$i} {
             flex-basis: percentage(calc(1 / calc(v.$column-count / $i)));
             max-width: percentage(calc(1 / calc(v.$column-count / $i)));
+            @extend %colSettings;
         }
     }
     // Generate the responsive ones
     @each $key, $value in $column-counts {
         @media (min-width: map-get(v.$grid-breakpoints, $key)) {
             .#{$prefix}-#{$key} {
-                flex-basis: 1;
+                flex: 1;
             }
             .#{$prefix}-#{$key}-auto {
                 max-width: fit-content;
@@ -221,8 +231,8 @@ body {
 @include gen-classes-num("p", "padding", 1);
 @include gen-classes-num("pt", "padding-top", 1);
 @include gen-classes-num("pb", "padding-bottom", 1);
-@include gen-classes-num("pr", "padding-right", 1);
-@include gen-classes-num("pl", "padding-left", 1);
+@include gen-classes-num("pe", "padding-right", 1);
+@include gen-classes-num("ps", "padding-left", 1);
 @include gen-classes-num("py", ("padding-top", "padding-bottom"), 1);
 @include gen-classes-num("px", ("padding-right", "padding-left"), 1);
 
@@ -232,8 +242,8 @@ body {
 @include gen-classes-num("m", "margin", 1);
 @include gen-classes-num("mt", "margin-top", 1);
 @include gen-classes-num("mb", "margin-bottom", 1);
-@include gen-classes-num("mr", "margin-right", 1);
-@include gen-classes-num("ml", "margin-left", 1);
+@include gen-classes-num("me", "margin-right", 1);
+@include gen-classes-num("ms", "margin-left", 1);
 @include gen-classes-num("my", ("margin-top", "margin-bottom"), 1);
 @include gen-classes-num("mx", ("margin-right", "margin-left"), 1);
 
@@ -243,81 +253,263 @@ body {
 @include gen-classes-num("br", "border-radius", 1);
 // @include gen-classes-word("corner", "border-radius", v.$corners);
 
-.fullheight {
-    height: 100%;
+/***************************************************************************
+ * Percentage Layouts
+ **************************************************************************/
+
+@mixin gen-percentage($prefix, $property) {
+    // Generate the "normal" class
+    @each $perc, $val in v.$percentage-types {
+        .#{$prefix}-#{$perc} {
+            #{$property}: #{$val};
+        }
+    }
+    @each $brKey, $brValue in v.$grid-breakpoints {
+        @media (min-width: $brValue) {
+            // Generate the responsive classes
+            @each $perc, $val in v.$percentage-types {
+                .#{$prefix}-#{$brKey}-#{$perc} {
+                    #{$property}: #{$val};
+                }
+            }
+        }
+    }
 }
 
-.fullwidth {
-    width: 100%;
+@include gen-percentage("w", "width");
+@include gen-percentage("h", "height");
+
+/***************************************************************************
+  * Position Classes
+  **************************************************************************/
+@each $posplace in v.$pos-places {
+    @include gen-percentage($posplace, $posplace);
 }
 
-.fullsize {
-    height: 100%;
-    width: 100%;
+/***************************************************************************
+ * Custom layouts
+ **************************************************************************/
+@mixin gen-properties($prefix, $posfix, $propMap) {
+    // Generate the "normal" class
+    .#{$prefix}-#{$posfix} {
+        @each $prop, $value in $propMap {
+            #{$prop}: $value;
+        }
+    }
+    @each $brKey, $brValue in v.$grid-breakpoints {
+        @media (min-width: $brValue) {
+            // Generate the responsive classes
+            .#{$prefix}-#{$brKey}-#{$posfix} {
+                @each $prop, $value in $propMap {
+                    #{$prop}: $value !important;
+                }
+            }
+        }
+    }
 }
+
+@include gen-properties(
+    "m",
+    "auto",
+    (
+        margin: auto,
+    )
+);
+@include gen-properties(
+    "m",
+    "initial",
+    (
+        margin: initial,
+    )
+);
+
+$sticky-top-map: (
+    position: sticky,
+    top: 0,
+    z-index: 1020,
+);
+@include gen-properties("sticky", "top", $sticky-top-map);
+
+$sticky-bottom-map: (
+    position: sticky,
+    bottom: 0,
+    z-index: 1020,
+);
+@include gen-properties("sticky", "bottom", $sticky-bottom-map);
+
+$fixed-top-map: (
+    position: fixed,
+    right: 0,
+    top: 0,
+    left: 0,
+    z-index: 1030,
+);
+@include gen-properties("fixed", "top", $fixed-top-map);
+
+$fixed-bottom-map: (
+    position: fixed,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    z-index: 1030,
+);
+@include gen-properties("fixed", "bottom", $fixed-bottom-map);
+
+$flexV: (
+    display: flex,
+    flex-direction: column,
+);
+@include gen-properties("flex", "v", $flexV);
+
+$flexH: (
+    display: flex,
+    flex-direction: row,
+);
+@include gen-properties("flex", "h", $flexH);
+
+$flexVRev: (
+    display: flex,
+    flex-direction: column-reverse,
+);
+@include gen-properties("flex", "v-rev", $flexVRev);
+
+$flexHRev: (
+    display: flex,
+    flex-direction: row-reverse,
+);
+@include gen-properties("flex", "h-rev", $flexHRev);
+
+@include gen-properties(
+    "flex",
+    "wrap",
+    (
+        flex-wrap: wrap,
+    )
+);
+@include gen-properties(
+    "flex",
+    "nowrap",
+    (
+        flex-wrap: nowrap,
+    )
+);
+
+@include gen-properties(
+    "flex-justify",
+    "start",
+    (
+        justify-content: flex-start,
+    )
+);
+
+@include gen-properties(
+    "flex-justify",
+    "center",
+    (
+        justify-content: center,
+    )
+);
+
+@include gen-properties(
+    "flex-justify",
+    "end",
+    (
+        justify-content: flex-end,
+    )
+);
+
+@include gen-properties(
+    "flex-align",
+    "start",
+    (
+        align-items: flex-start,
+    )
+);
+
+@include gen-properties(
+    "flex-align",
+    "center",
+    (
+        align-items: center,
+    )
+);
+
+@include gen-properties(
+    "flex-align",
+    "end",
+    (
+        align-items: flex-end,
+    )
+);
+
+//* Flex Orders
+
+@mixin order-utilities {
+    @for $i from 1 through 5 {
+        .order-#{$i} {
+            order: $i;
+        }
+    }
+
+    @each $brKey, $brValue in v.$grid-breakpoints {
+        @for $i from 1 through 5 {
+            .order-#{$brKey}-#{$i} {
+                @media (min-width: $brValue) {
+                    order: $i;
+                }
+            }
+        }
+    }
+}
+
+// Example usage:
+@include order-utilities;
+
+@include gen-properties(
+    "order",
+    "first",
+    (
+        order: -1,
+    )
+);
+
+@include gen-properties(
+    "order",
+    "last",
+    (
+        order: 6,
+    )
+);
 
 .overlay {
     position: absolute;
-}
-
-.vertical-flex,
-.flex-v {
-    display: flex;
-    flex-direction: column !important;
-}
-.flex-h {
-    display: flex;
-    flex-direction: row !important;
-}
-.flex-wrap {
-    flex-wrap: wrap !important;
-}
-.flex-nowrap {
-    flex-wrap: nowrap !important;
-}
-
-.flex-justify-center {
-    justify-content: center !important;
-}
-.flex-justify-end {
-    justify-content: flex-end !important;
-}
-.flex-align-center {
-    align-items: center !important;
-}
-.flex-align-end {
-    align-items: flex-end !important;
 }
 
 .border {
     border: 1px solid var(--md-sys-color-outline);
 }
 
-.text-center {
-    text-align: center;
+.img-fluid {
+    overflow: hidden;
+    object-fit: cover;
 }
 
-.text-normal {
-    font-family: "Roboto Flex", sans-serif !important;
-    font-size: inherit !important;
+.img-ratio {
+    position: relative;
+    width: 100%; // Set the width as needed
+    padding-top: attr(data-mdpg-aspectratio percentage);
+    overflow: hidden;
+
+    & img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; // Adjust this property as needed (cover, contain, etc.)
+    }
 }
 
-[class*="bg-"] span {
-    color: var(--md-sys-color-background);
-    font-size: 0.875em;
-}
-.bg-green {
-    background-color: var(--md-custom-color-good);
-}
-.bg-yellow {
-    background-color: var(--md-custom-color-warning) !important;
-}
-.bg-error {
-    background-color: var(--md-sys-color-error) !important;
-}
-.bg-color-inverse {
-    background-color: var(--md-sys-color-on-primary) !important;
-}
 .wrap {
     white-space: pre-wrap !important;
     text-overflow: ellipsis !important;
@@ -341,14 +533,15 @@ body {
     flex-direction: row;
     padding-bottom: 58px;
     margin-top: 64px;
-}
-.panelcontainer .panel {
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 8px;
-    transition: transform var(--md-sys-motion-duration-long3) var(--md-sys-motion-easing-emphasized-decelerate),
-        opacity var(--md-sys-motion-duration-medium3) var(--md-sys-motion-easing-emphasized-decelerate);
+
+    & .panel {
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 8px;
+        transition: transform var(--md-sys-motion-duration-long3) var(--md-sys-motion-easing-emphasized-decelerate),
+            opacity var(--md-sys-motion-duration-medium3) var(--md-sys-motion-easing-emphasized-decelerate);
+    }
 }
 
 /* Pantallas Pequeñas (md) */
@@ -395,6 +588,16 @@ form {
     margin: 0;
 }
 
+.stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    content: "";
+}
+
 .center {
     margin: 0 auto;
     text-align: center;
@@ -436,7 +639,7 @@ form {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    border: 4px solid var(--md-sys-color-secondary);
+    border: 4px solid var(--md-sys-color-on-secondary);
     animation: spinner-bulqg1 0.8s infinite linear alternate, spinner-oaa3wk 1.6s infinite linear;
 }
 
@@ -490,13 +693,6 @@ form {
 
 #map-canvas {
     height: 500px;
-}
-
-.anim-none {
-    -moz-transition: none !important;
-    -webkit-transition: none !important;
-    -o-transition: all 0s ease !important;
-    transition: none !important;
 }
 
 /* 000Webhost */

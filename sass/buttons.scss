@@ -1,13 +1,13 @@
-@use "variables" as v;
+// BUTTON =======================================================
 
-/* BUTTON ======================================================= */
+// General
 
-/* General */
-[class*="button-"] {
+%button {
     display: flex;
     min-width: 48px;
     height: 40px;
     border-radius: 20px;
+    border: 0;
     text-align: center;
     cursor: pointer;
     transition: all v.$durationMedium2 v.$easingStandardDecelerate;
@@ -19,6 +19,7 @@
     justify-content: center;
     @extend .label-lg;
     padding: 0 24px 0 16px;
+    user-select: none;
 
     &:focus {
         transition: all v.$durationMedium2 v.$easingStandardDecelerate;
@@ -58,6 +59,10 @@
         font-size: 18px;
         margin-right: 8px;
     }
+}
+
+[class*="button-"] {
+    @extend %button;
 }
 
 .button {
@@ -193,7 +198,7 @@
     }
 
     &-fab {
-        display: none;
+        display: flex;
         position: fixed;
         z-index: 10;
         width: 96px;
@@ -291,7 +296,7 @@
     transition: all v.$durationLong1 v.$easingStandard;
 }
 
-[class*="button-icon-"] {
+%button-icon {
     position: relative;
     min-width: 40px;
     width: 40px;
@@ -306,10 +311,15 @@
     cursor: pointer;
     text-align: center;
     color: v.$colorOnSurfaceVariant;
+    @extend %noSelect;
 
     [data-theme="dark"] & {
         font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
     }
+}
+
+[class*="button-icon-"] {
+    @extend %button-icon;
 }
 
 .button-icon {
@@ -394,4 +404,54 @@
     gap: 8px;
     flex-wrap: wrap;
     justify-content: flex-end;
+}
+
+.pagination {
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    list-style: none;
+
+    & .page-item {
+        @extend %button-icon;
+        @extend .button-icon-text;
+        @extend .text-normal;
+
+        &.active {
+            @extend .button-icon-filled;
+        }
+
+        & .page-link {
+            color: unset;
+        }
+    }
+}
+
+.clickable {
+    cursor: pointer;
+    position: relative;
+    z-index: 8;
+    padding: 4px;
+    user-select: none;
+
+    &::before {
+        @extend %before-show;
+        border-radius: 8px;
+        opacity: 0;
+        background-color: v.$colorPrimary;
+        transition: opacity v.$durationMedium1 v.$easingStandardDecelerate;
+    }
+
+    &:hover::before {
+        opacity: v.$stateHover;
+    }
+
+    &:focus::before {
+        opacity: v.$stateFocus;
+    }
+
+    &:active::before {
+        opacity: v.$statePressed;
+    }
 }

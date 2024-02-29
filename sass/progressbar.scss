@@ -1,0 +1,9 @@
+.progress {
+    height: 4px;
+    background-color: v.$colorSurfaceContainerHighest;
+
+    &-bar {
+        height: 4px;
+        background-color: v.$colorPrimary;
+    }
+}

@@ -1,0 +1,131 @@
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 30;
+    display: none;
+    opacity: 0;
+    animation: md-appear v.$durationMedium3 v.$easingEmphasizedDecelerate;
+
+    &.modal-backdrop {
+        backdrop-filter: blur(2px);
+
+        &::before {
+            background-color: v.$colorBackground;
+            opacity: 0.3;
+            @extend %before-show;
+        }
+    }
+
+    &.show {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 1;
+    }
+
+    &-dialog {
+        display: none;
+        position: relative;
+        background-color: v.$colorSurface;
+        border-radius: 28px;
+        min-width: 280px;
+        max-width: 560px;
+        height: fit-content;
+        max-height: 100%;
+        margin: 24px;
+        overflow: hidden;
+        overflow-wrap: break-word;
+        align-content: flex-start;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        opacity: 0;
+        @include v.elevation(3);
+        animation: md-midgrow v.$durationMedium2 v.$easingEmphasizedDecelerate;
+        pointer-events: all;
+
+        &::before {
+            z-index: 7;
+            @extend %before-show;
+            opacity: 0.11;
+            background-color: v.$colorPrimary;
+        }
+
+        &.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        &.modal {
+            &-sm {
+                max-width: 300px !important;
+            }
+
+            &-lg {
+                max-width: 800px !important;
+            }
+
+            &-xl {
+                max-width: 1140px !important;
+            }
+        }
+
+        & .modal {
+            &-header {
+                .scroll & {
+                    border-bottom: 1px solid v.$colorOutline;
+                }
+                padding: 24px 24px 0 24px;
+                position: sticky;
+                bottom: 0;
+                background-color: v.$colorSurface;
+
+                & .modal-title {
+                    display: block;
+                    @extend .header-sm;
+                }
+
+                & .icon {
+                    color: v.$colorSecondary;
+                    font-size: 24px;
+                    text-align: center;
+                    display: block;
+                }
+
+                & .icon ~ .modal-title {
+                    text-align: center;
+                    margin-top: 16px;
+                    justify-content: center;
+                }
+            }
+
+            &-title {
+                color: v.$colorOnSurface;
+            }
+
+            &-body {
+                color: v.$colorOnSurfaceVariant;
+                overflow-y: auto;
+                padding: 16px 24px;
+                max-height: 70vh;
+            }
+
+            &-footer {
+                .scroll & {
+                    border-top: 1px solid v.$colorOutline;
+                }
+                display: flex;
+                justify-content: flex-end;
+                column-gap: 8px;
+                padding: 24px;
+                position: sticky;
+                bottom: 0;
+                background-color: v.$colorSurface;
+                z-index: 1;
+            }
+        }
+    }
+}

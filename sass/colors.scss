@@ -1,0 +1,197 @@
+.bg {
+    &-primary {
+        background-color: v.$colorPrimary !important;
+        color: v.$colorOnPrimary !important;
+
+        &-container {
+            background-color: v.$colorPrimaryContainer !important;
+            color: v.$colorOnPrimaryContainer !important;
+        }
+    }
+
+    &-secondary {
+        background-color: v.$colorSecondary !important;
+        color: v.$colorOnSecondary !important;
+    }
+
+    &-tertiary {
+        background-color: v.$colorTertiary !important;
+        color: v.$colorOnTertiary !important;
+    }
+
+    &-green {
+        background-color: v.$colorGreen !important;
+        color: v.$colorOnGreen !important;
+    }
+
+    &-yellow {
+        background-color: v.$colorYellow !important;
+        color: v.$colorOnYellow !important;
+
+        &-container {
+            background-color: v.$colorYellowContainer !important;
+            color: v.$colorOnYellowContainer !important;
+        }
+    }
+
+    &-error {
+        background-color: v.$colorError !important;
+        color: v.$colorOnError !important;
+    }
+
+    &-background {
+        background-color: v.$colorBackground !important;
+        color: v.$colorOnBackground !important;
+    }
+
+    &-on {
+        &-primary {
+            background-color: v.$colorOnPrimary !important;
+            color: v.$colorPrimary !important;
+
+            &-container {
+                background-color: v.$colorOnPrimaryContainer !important;
+                color: v.$colorPrimaryContainer !important;
+            }
+        }
+
+        &-secondary {
+            background-color: v.$colorOnSecondary !important;
+            color: v.$colorSecondary !important;
+        }
+
+        &-tertiary {
+            background-color: v.$colorOnTertiary !important;
+            color: v.$colorTertiary !important;
+        }
+
+        &-green {
+            background-color: v.$colorOnGreen !important;
+            color: v.$colorGreen !important;
+        }
+
+        &-yellow {
+            background-color: v.$colorOnYellow !important;
+            color: v.$colorYellow !important;
+
+            &-container {
+                background-color: v.$colorOnYellowContainer !important;
+                color: v.$colorYellowContainer !important;
+            }
+        }
+
+        &-error {
+            background-color: v.$colorOnError !important;
+            color: v.$colorError !important;
+        }
+
+        &-background {
+            background-color: v.$colorOnBackground !important;
+            color: v.$colorBackground !important;
+        }
+    }
+
+    &-inverse {
+        background-color: v.$colorInverseSurface !important;
+        color: v.$colorInverseOnSurface !important;
+    }
+
+    &-appbar {
+        background-color: v.$colorPrimary !important;
+        color: v.$colorOnPrimary !important;
+
+        [data-theme="dark"] & {
+            background-color: v.$colorPrimaryContainer !important;
+            color: v.$colorOnPrimaryContainer !important;
+        }
+    }
+}
+
+.text {
+    &-primary {
+        color: v.$colorPrimary !important;
+
+        &-container {
+            color: v.$colorPrimaryContainer !important;
+        }
+    }
+
+    &-secondary {
+        color: v.$colorSecondary !important;
+
+        &-container {
+            color: v.$colorSecondaryContainer !important;
+        }
+    }
+
+    &-tertiary {
+        color: v.$colorTertiary !important;
+
+        &-container {
+            color: v.$colorTertiaryContainer !important;
+        }
+    }
+
+    &-on {
+        &-primary {
+            color: v.$colorOnPrimary !important;
+
+            &-container {
+                color: v.$colorOnPrimaryContainer !important;
+            }
+        }
+
+        &-secondary {
+            color: v.$colorOnSecondary !important;
+
+            &-container {
+                color: v.$colorOnSecondaryContainer !important;
+            }
+        }
+
+        &-tertiary {
+            color: v.$colorOnTertiary !important;
+
+            &-container {
+                color: v.$colorOnTertiaryContainer !important;
+            }
+        }
+    }
+
+    &-inverted {
+        color: v.$colorBackground !important;
+    }
+
+    &-green {
+        color: v.$colorGreen !important;
+    }
+
+    &-yellow {
+        color: v.$colorYellow !important;
+
+        &-container {
+            color: v.$colorYellowContainer !important;
+        }
+    }
+
+    &-error {
+        color: v.$colorError !important;
+    }
+
+    &-on-image {
+        color: v.$colorBackground !important;
+
+        [data-theme="dark"] & {
+            color: v.$colorOnBackground !important;
+        }
+    }
+}
+
+.fill {
+    &-primary {
+        filter: v.$filterOnPrimaryContainer;
+        transition: none;
+        pointer-events: none;
+        user-select: none;
+    }
+}

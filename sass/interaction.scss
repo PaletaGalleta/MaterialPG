@@ -1,0 +1,11 @@
+%noClick {
+    pointer-events: none;
+}
+
+.noclick {
+    @extend %noClick;
+}
+
+%noSelect {
+    user-select: none;
+}

@@ -1,29 +1,31 @@
-/* Componentes de Material Design, utilizando las lineas de dseño V2 y V3 https://m3.material.io/ */
+/* Material Design CSS extraction, using design guidelines from MD2 and MD3 https://m3.material.io/ */
 
-/*
-SG Legacy
-- #ba334d
-- #479aff
-- #650a11
-- #998e8e
-*/
-
-/* Importar la fuente */
+// Import Variables
 @use "sass/variables" as v;
 
+// Font for Icons
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@400;500&display=swap");
 
+// Import layout files
 @import "sass/layout";
+@import "sass/colors";
+@import "sass/interaction";
+@import "sass/text";
 @import "sass/animations";
+
+// Import component files
+@import "sass/buttons";
+@import "sass/progressbar";
+@import "sass/appbar";
 @import "sass/navigationbar";
 @import "sass/cards";
 @import "sass/chips";
-@import "sass/buttons";
-
-/* Puntos en los que se divide el diseño responsivo */
+@import "sass/tables";
+@import "sass/modal";
+@import "sass/carousel";
 
 * {
-    transition: all v.$durationMedium4 v.$easingStandard, color v.$durationShort4 v.$easingStandard;
+    transition: all v.$durationMedium4 v.$easingStandard, color v.$durationShort1 v.$easingStandard;
 }
 
 body {
@@ -33,25 +35,25 @@ body {
 
 html {
     color: v.$colorOnSurface;
+    scroll-behavior: smooth;
 }
 
 /* Texto */
 span {
-    display: flex;
+    // display: flex;
     transition: none !important;
     color: inherit;
-    flex-wrap: wrap;
-    column-gap: 4px;
+    font-family: inherit;
 }
 
-/* Texto seleccionado */
+// Texto seleccionado
 
 ::selection {
     color: v.$colorOnTertiaryContainer;
     background: v.$colorTertiaryContainer;
 }
 
-/* width */
+// width
 
 ::-webkit-scrollbar {
     width: 8px;
@@ -96,35 +98,7 @@ a {
 }
 
 .icon {
-    font-family: v.$materialSymbols !important;
-    display: inline-block;
-    vertical-align: bottom;
-    font-variation-settings: "FILL" 0, "wght" 500, "opsz" 24;
-    line-height: inherit;
-
-    &.color {
-        color: v.$colorPrimary;
-    }
-
-    &.big {
-        font-variation-settings: "FILL" 0, "wght" 500, "opsz" 48 !important;
-
-        [data-theme="dark"] & {
-            font-variation-settings: "FILL" 0, "wght" 400, "opsz" 48 !important;
-        }
-    }
-
-    &.filled {
-        font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
-
-        [data-theme="dark"] & {
-            font-variation-settings: "FILL" 1, "wght" 300, "opsz" 24 !important;
-        }
-    }
-
-    [data-theme="dark"] & {
-        font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
-    }
+    @extend %icon;
 }
 
 span .icon::after {
@@ -151,24 +125,6 @@ span .icon::after {
 div.disabled {
     pointer-events: none !important;
     opacity: 0.6 !important;
-}
-
-.content {
-    display: flex;
-    flex-direction: column;
-    margin-left: 88px;
-    min-height: calc(100% - 64px);
-
-    &.fixed {
-        height: 100%;
-        width: 100%;
-        padding-top: 64px;
-        margin-left: 0;
-        flex-direction: row;
-        top: 0;
-        left: 0;
-        position: absolute;
-    }
 }
 
 .footer,
@@ -232,239 +188,12 @@ div.disabled {
     }
 }
 
-/* HEADER ======================================================= */
-
-.topbar {
-    background-color: v.$colorSurface;
-    color: v.$colorOnSurface;
-    @extend .title-lg;
-    line-height: 64px;
-    height: 64px;
-    position: sticky;
-    top: 0px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    z-index: 16;
-    transition: box-shadow v.$durationMedium2 v.$easingStandard, background-color v.$durationMedium2 v.$easingStandard;
-
-    &.scrolled {
-        background-color: v.$colorSurfaceContainer;
-        @include v.elevation(2);
-    }
-
-    .menu {
-        display: none;
-    }
-
-    .logo {
-        position: absolute;
-        height: 100%;
-        padding: 8px;
-        width: 100%;
-        z-index: 1;
-        background-color: transparent;
-        display: flex;
-        justify-content: center;
-    }
-
-    span {
-        float: left;
-        padding: 0 16px;
-        overflow: hidden;
-    }
-
-    ul {
-        display: flex;
-        align-items: center;
-        list-style: none;
-        margin: 0;
-        margin-block: 0;
-        padding: 0;
-
-        li {
-            overflow: hidden;
-            position: relative;
-
-            .desc {
-                display: none;
-            }
-        }
-    }
-
-    &.short {
-        .menu {
-            display: flex;
-            justify-content: center;
-        }
-
-        ul {
-            background-color: v.$colorSurface;
-            border-radius: v.$cornerMedium;
-            position: absolute;
-            min-width: 112px;
-            max-width: 280px;
-            flex-direction: column;
-            top: 64px;
-            right: 2px;
-            visibility: hidden;
-            // pointer-events: none;
-            opacity: 0;
-            padding: 8px 0;
-            @include v.elevation(2);
-            transition: all v.$durationShort4 v.$easingStandard;
-        }
-
-        .menu {
-            &:active ~ ul,
-            &:focus ~ ul {
-                visibility: visible;
-                opacity: 1;
-                pointer-events: initial;
-            }
-        }
-
-        ul {
-            &::before {
-                content: " ";
-                background-color: v.$colorPrimary;
-                opacity: 0.1;
-                border-radius: 12px;
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                top: 0;
-                left: 0;
-            }
-
-            li {
-                display: flex;
-                width: 100% !important;
-
-                .item {
-                    display: flex;
-                    align-items: center;
-                    overflow: visible;
-                    width: 100% !important;
-                    position: relative;
-                    height: 48px;
-                    margin: 0;
-                    padding: 0 12px;
-                    transition: all v.$durationShort4 v.$easingStandardDecelerate;
-                    cursor: pointer;
-                    text-align: left;
-                    font-size: 24px;
-                    vertical-align: middle;
-                    z-index: 5;
-                    color: v.$colorOnSurfaceVariant;
-                    font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
-                }
-            }
-
-            li {
-                .item::before {
-                    width: 100%;
-                    border-radius: 0;
-                    height: 100%;
-                    left: 0;
-                    overflow: hidden;
-                    top: 0;
-                }
-            }
-
-            li {
-                .desc {
-                    @extend .label-lg;
-                    display: block;
-                    padding: 0 0 0 12px;
-                }
-            }
-        }
-    }
-
-    .button {
-        z-index: 2;
-        width: 64px;
-        text-align: center;
-        margin: 0;
-
-        a {
-            &:hover {
-                color: v.$colorOnSurfaceVariant;
-            }
-
-            &:hover::before {
-                opacity: v.$stateHover;
-            }
-
-            &:focus::before {
-                opacity: v.$stateFocus;
-            }
-
-            &:active::before {
-                opacity: v.$statePressed;
-            }
-
-            &::before {
-                content: "";
-                transition: all v.$durationShort4 v.$easingStandardDecelerate;
-                opacity: 0;
-                width: 40px;
-                height: 40px;
-                top: 4px;
-                left: 4px;
-                border-radius: 50%;
-                position: absolute;
-                background-color: v.$colorOnSurfaceVariant;
-            }
-        }
-
-        &.selected a {
-            color: v.$colorPrimary;
-            font-variation-settings: "FILL" 1, "wght" 400, "opsz" 24;
-
-            &:hover {
-                color: v.$colorPrimary;
-            }
-
-            &::before {
-                background-color: v.$colorPrimary;
-            }
-        }
-
-        .item {
-            position: relative;
-            width: 48px;
-            height: 48px;
-            padding: 8px;
-            transition: all v.$durationShort4 v.$easingStandardDecelerate;
-            cursor: pointer;
-            text-align: center;
-            line-height: 32px;
-            font-size: 24px;
-            vertical-align: middle;
-            margin: 8px;
-            z-index: 2;
-            color: v.$colorOnSurfaceVariant;
-            font-variation-settings: "FILL" 0, "wght" 400, "opsz" 24;
-        }
-    }
-
-    .twopanel & {
-        position: fixed;
-        width: 100%;
-        top: 0;
-        left: 0;
-    }
-}
-
 /* FORMULARIO =================================================== */
 
 form {
     display: flex;
     margin: 0;
     flex-direction: column;
-    row-gap: 8px;
 }
 
 /* TEXTFIELD BUSCADOR =========================== */
@@ -473,9 +202,7 @@ form {
     display: flex;
     flex-direction: column;
     border-radius: 24px;
-    margin: 16px 0 8px 0;
-
-    /* overflow: hidden; */
+    margin: 8px 0;
     position: relative;
 }
 
@@ -657,6 +384,30 @@ form {
     }
 }
 
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    width: fit-content;
+
+    & input {
+        width: 0;
+        height: 0;
+
+        &:checked ~ label,
+        &:hover ~ label {
+            & .icon,
+            & ~ input:checked ~ label .icon {
+                font-variation-settings: "FILL" 1, "wght" 500, "opsz" 24;
+            }
+        }
+    }
+
+    & .icon {
+        color: inherit;
+        transition: font-variation-settings v.$durationShort4 v.$easingStandard !important;
+    }
+}
+
 /* TEXTFIELD & TEXTAREA =========================== */
 
 input,
@@ -692,18 +443,22 @@ input:disabled {
         overflow: hidden;
         text-overflow: ellipsis;
         text-align: justify;
+        display: flex;
     }
 
     .counter {
         color: v.$colorOnSurfaceVariant;
         @extend .body-sm;
-        padding: 4px 16px 0 0;
         text-align: right;
         width: fit-content;
     }
 
     input:disabled {
         opacity: v.$stateDisabledContent;
+    }
+
+    & textarea {
+        resize: none;
     }
 }
 
@@ -794,7 +549,7 @@ input:read-only {
         pointer-events: none;
         left: 0px;
         top: 0px;
-        margin: 16px 16px 16px 12px;
+        margin: 14px 16px 14px 12px;
         text-align: center;
         overflow: hidden;
     }
@@ -838,6 +593,10 @@ input:read-only {
         @extend .body-lg;
         z-index: 1;
         transition: all v.$durationShort4 v.$easingStandard;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: inherit;
     }
 
     .icon ~ label {
@@ -991,7 +750,7 @@ input:read-only {
         position: absolute;
         display: flex;
         font-size: 20px;
-        height: 100%;
+        height: 56px;
         color: v.$colorOnSurfaceVariant;
         font-variation-settings: "FILL" 1, "wght" 600, "opsz" 24;
         align-items: center;
@@ -1009,7 +768,6 @@ input:read-only {
 
     .trailing {
         right: 0;
-        height: 100%;
     }
 }
 
@@ -1072,6 +830,10 @@ input:read-only {
         top: 0;
         transition: all v.$durationMedium3 v.$easingStandard;
         @extend .body-lg;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: inherit;
     }
 
     .leading ~ label {
@@ -1307,36 +1069,6 @@ input {
     }
 }
 
-/* TABLA ====================================================== */
-
-table {
-    width: 100%;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid v.$colorOutline;
-    border-spacing: 0;
-}
-
-tr {
-    height: 52px;
-}
-
-td {
-    padding: 0 16px;
-    color: v.$colorOnSurface;
-    border-top: 1px solid v.$colorOutline;
-    margin: 0;
-
-    &.tcenter {
-        text-align: center;
-    }
-}
-
-th {
-    height: 56px;
-    color: v.$colorOnSurface;
-}
-
 /* ACORDEON =================================================== */
 
 .cardaccordion {
@@ -1354,72 +1086,72 @@ th {
 
 .accordion {
     overflow: hidden;
-}
 
-.accordion-title {
-    padding: 16px 46px 16px 24px;
-    margin: 0;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
+    &.open {
+        > .accordion-title::before {
+            transform: rotate(180deg);
+        }
 
-    &::before {
-        display: flex;
-        height: 100%;
-        position: absolute;
-        padding: 0 16px;
+        > .accordion-content {
+            grid-template-rows: 1fr;
+        }
+    }
+
+    &-title {
+        padding: 16px 46px 16px 24px;
         margin: 0;
-        font-size: 1.5em;
-        content: "expand_more";
-        right: 0;
-        bottom: 0;
-        font-family: v.$materialSymbols;
-        color: inherit;
-        align-items: center;
-    }
-
-    &::after {
-        @extend %before-show;
-        opacity: 0;
-    }
-
-    &:hover::after {
-        opacity: v.$stateHover;
-    }
-
-    &:focus::after {
-        opacity: v.$stateFocus;
-    }
-
-    &:active::after {
-        opacity: v.$statePressed;
-    }
-}
-
-.open {
-    > .accordion-title::before {
-        transform: rotate(180deg);
-    }
-
-    > .accordion-content {
-        grid-template-rows: 1fr;
-    }
-}
-
-.accordion-content {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows v.$durationLong1 v.$easingEmphasized;
-
-    > div {
+        position: relative;
         overflow: hidden;
-        transition: padding v.$durationLong1 v.$easingEmphasized;
-    }
-}
+        cursor: pointer;
 
-div:not(.open) > .accordion-content > div {
-    padding-top: 0;
-    padding-bottom: 0;
+        &::before {
+            display: flex;
+            height: 100%;
+            position: absolute;
+            padding: 0 16px;
+            margin: 0;
+            font-size: 1.5em;
+            content: "expand_more";
+            right: 0;
+            bottom: 0;
+            font-family: v.$materialSymbols;
+            color: inherit;
+            align-items: center;
+        }
+
+        &::after {
+            @extend %before-show;
+            opacity: 0;
+        }
+
+        &:hover::after {
+            opacity: v.$stateHover;
+        }
+
+        &:focus::after {
+            opacity: v.$stateFocus;
+        }
+
+        &:active::after {
+            opacity: v.$statePressed;
+        }
+    }
+
+    &-content {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows v.$durationLong1 v.$easingEmphasized;
+
+        > div {
+            overflow: hidden;
+            transition: padding v.$durationLong1 v.$easingEmphasized;
+        }
+    }
+
+    & div:not(.open) > .accordion-content > div {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
 }
 
 /* LISTA ====================================================== */
@@ -1468,7 +1200,7 @@ div:not(.open) > .accordion-content > div {
     }
 
     .icon {
-        color: v.$colorPrimary;
+        // color: v.$colorPrimary;
         font-size: 24px;
         flex: 0 0 24px;
 
@@ -1543,98 +1275,6 @@ div:not(.open) > .accordion-content > div {
         @extend %before-show;
         background-color: v.$colorBackground;
         opacity: 0.3;
-    }
-}
-
-/* DIALOGO ======================================================= */
-
-.dialog-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 30;
-    display: none;
-    opacity: 0;
-    -webkit-backdrop-filter: blur(2px);
-    backdrop-filter: blur(2px);
-    animation: md-appear v.$durationMedium3 v.$easingEmphasizedDecelerate;
-
-    &::before {
-        background-color: v.$colorBackground;
-        opacity: 0.3;
-        @extend %before-show;
-    }
-
-    &.show {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        opacity: 1;
-    }
-}
-
-.dialog {
-    display: none;
-    position: relative;
-    background-color: v.$colorSurface;
-    border-radius: 28px;
-    min-width: 280px;
-    max-width: 560px;
-    height: fit-content;
-    max-height: 100%;
-    padding: 24px;
-    margin: 24px;
-    overflow: hidden;
-    overflow-wrap: break-word;
-    align-content: flex-start;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
-    opacity: 0;
-    @include v.elevation(3);
-    animation: md-midgrow v.$durationMedium2 v.$easingEmphasizedDecelerate;
-
-    &::before {
-        z-index: 7;
-        @extend %before-show;
-        opacity: 0.11;
-        background-color: v.$colorPrimary;
-    }
-
-    &.show {
-        display: flex;
-        opacity: 1;
-    }
-
-    .header-sm {
-        color: v.$colorOnSurface;
-        margin-bottom: 16px;
-    }
-
-    .body-md {
-        color: v.$colorOnSurfaceVariant;
-    }
-
-    > .icon {
-        color: v.$colorSecondary;
-        font-size: 24px;
-        text-align: center;
-    }
-
-    .icon ~ .header-sm {
-        text-align: center;
-        margin-top: 16px;
-        justify-content: center;
-    }
-
-    .buttonarea {
-        margin-top: 24px;
-    }
-
-    .dialogcontent {
-        overflow-y: auto;
     }
 }
 
@@ -1719,8 +1359,6 @@ div:not(.open) > .accordion-content > div {
         height: 0;
     }
 }
-
-/* Hide default HTML checkbox */
 
 /* The slider */
 
@@ -1928,7 +1566,7 @@ input:checked + .slider {
     margin: auto;
     display: flex;
     flex-direction: column;
-    z-index: 1;
+    z-index: 50;
     row-gap: 8px;
     bottom: 24px;
     flex-direction: column;
@@ -2054,9 +1692,9 @@ input[type="radio"]:checked + .radiolabel {
 
 /* Pantallas Medianas (md) */
 @media only screen and (max-width: 1000px) {
-    .content {
-        margin-left: 88px;
-    }
+    // .content {
+    //     margin-left: 88px;
+    // }
 
     .searcharea.morph {
         position: fixed;
@@ -2281,4 +1919,26 @@ input[type="radio"]:checked + .radiolabel {
 
 .skeleton {
     animation: md-spinner v.$durationMedium2 v.$easingStandard infinite alternate;
+}
+
+.circle-badge {
+    position: absolute;
+    height: 52px;
+    width: 52px;
+    padding: 8px;
+    background-color: v.$colorPrimary;
+    border-radius: 50%;
+    top: 0;
+    right: 0;
+    // left: calc(200px - 26px);
+    // top: calc(50% - 26px);
+    z-index: 2;
+    @include v.elevation(3);
+
+    & .icon {
+        color: v.$colorOnPrimary;
+        @extend .header-md;
+        text-align: center;
+        width: 36px;
+    }
 }

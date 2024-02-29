@@ -1,32 +1,3 @@
-@use "variables" as v;
-
-.clickable {
-    cursor: pointer;
-    position: relative;
-    z-index: 8;
-    padding: 4px;
-
-    &::before {
-        @extend %before-show;
-        border-radius: 8px;
-        opacity: 0;
-        background-color: v.$colorPrimary;
-        transition: opacity v.$durationMedium1 v.$easingStandardDecelerate;
-    }
-
-    &:hover::before {
-        opacity: v.$stateHover;
-    }
-
-    &:focus::before {
-        opacity: v.$stateFocus;
-    }
-
-    &:active::before {
-        opacity: v.$statePressed;
-    }
-}
-
 // General
 [class*="card-"] {
     border-radius: 12px;
@@ -34,7 +5,19 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    animation: md-cardappear v.$durationMedium4 v.$easingStandardDecelerate;
+
+    $anim-delay: v.$durationShort1;
+
+    @for $i from 1 through 30 {
+        [class*="col-"]:nth-child(#{$i}) > & {
+            animation: md-cardappear v.$durationMedium4 v.$easingStandardDecelerate (#{$i * $anim-delay}) both;
+        }
+    }
+    @for $i from 1 through 30 {
+        &:nth-child(#{$i}) {
+            animation: md-cardappear v.$durationMedium4 v.$easingStandardDecelerate (#{$i * $anim-delay}) both;
+        }
+    }
 
     &.fullheight {
         height: 100%;
@@ -44,7 +27,7 @@
         &::before {
             @extend %before-show;
             border-radius: 12px;
-            opacity: 0;
+            // opacity: 0;
             background-color: v.$colorPrimary;
             transition: opacity v.$durationMedium1 v.$easingStandardDecelerate;
         }
@@ -63,17 +46,11 @@
     }
 }
 
-.cardcontent {
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    z-index: 1;
-}
-
 .card {
     // Elevated
     &-elevated {
         background-color: v.$colorSurfaceContainerLow;
+        color: v.$colorOnSurface;
         transition: none;
         @include v.elevation(1);
 
@@ -103,6 +80,28 @@
         border: 1px solid v.$colorOutline;
     }
 
+    &-empty {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 16px 8px 24px 8px;
+        color: v.$colorOnSurface;
+        row-gap: 4px;
+
+        .icon {
+            font-size: 72px;
+            opacity: 0.3;
+            font-variation-settings: "FILL" 0, "wght" 700, "opsz" 48;
+        }
+
+        span {
+            opacity: 0.5;
+            text-align: center;
+            @extend .title-lg;
+        }
+    }
+
     &img {
         background-color: v.$colorPrimaryContainer;
         border-radius: 12px 12px 0 0;
@@ -111,25 +110,39 @@
             border-radius: inherit;
         }
     }
-}
 
-.emptycard {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 16px 8px 24px 8px;
-    color: v.$colorOnSurface;
-    row-gap: 4px;
-
-    .icon {
-        font-size: 72px;
-        opacity: 0.3;
-        font-variation-settings: "FILL" 0, "wght" 700, "opsz" 48;
+    &content {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        z-index: 1;
     }
 
-    span {
-        opacity: 0.5;
-        text-align: center;
+    &:hover .card-description-dropdown {
+        bottom: 0;
+        height: 100%;
+    }
+
+    &-description-dropdown {
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        right: 0;
+        background-color: v.$colorPrimaryContainer;
+        color: v.$colorOnPrimaryContainer;
+        overflow: hidden;
+        width: 100%;
+        height: 0;
+        transition: 0.5s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 16px;
+
+        & .text {
+            text-align: center;
+            @extend .body-lg;
+            margin: 0;
+        }
     }
 }
