@@ -521,14 +521,14 @@ $flexHRev: (
 .panel-container {
     position: relative;
     width: 100%;
+    overflow-x: hidden;
 
     & .panel {
         position: absolute;
         width: inherit;
-        padding: 0 4px;
         height: fit-content;
-        transition: transform var(--md-sys-motion-duration-long4) var(--md-sys-motion-easing-emphasized-decelerate),
-            opacity var(--md-sys-motion-duration-long4) var(--md-sys-motion-easing-emphasized-decelerate);
+        padding: 4px;
+        transition: transform v.$durationXLong4 v.$easingEmphasized, opacity v.$durationLong4 v.$easingEmphasized;
 
         opacity: 0;
 
