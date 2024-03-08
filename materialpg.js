@@ -1355,8 +1355,8 @@ materialpg.PanelView = class {
 
     // Function to recalculate maximum height and update container
     updateContainerHeight() {
-        const panelElement = this.panels[this.currentPanel];
-        this.domElement.style.height = `${panelElement.offsetHeight}px`;
-        console.log("updating height to " + panelElement.offsetHeight);
+        const maxHeight = Math.max(...Array.from(this.panels).map(child => child.offsetHeight));
+        // const panelElement = this.panels[this.currentPanel];
+        this.domElement.style.height = `${maxHeight + 8}px`;
     }
 };
