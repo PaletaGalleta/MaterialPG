@@ -60,18 +60,18 @@ span {
 
     /* Track */
     &-track {
-        background-color: v.$colorBackground;
+        background-color: v.$colorSurfaceContainer;
     }
 
     /* Handle */
     &-thumb {
-        background-color: v.$colorSurfaceContainerHigh;
+        background-color: v.$colorSurfaceContainerHighest;
         border-radius: 4px;
         transition: background-color v.$durationMedium1 v.$easingStandardDecelerate;
         opacity: 0.2;
 
         &:hover {
-            background-color: v.$colorSurfaceContainerHighest;
+            background-color: v.$colorPrimaryContainer;
         }
     }
 }
