@@ -5187,17 +5187,31 @@ body.noscroll {
   text-overflow: ellipsis !important;
 }
 
-/* Basado en paneles
- - Dos paneles
- - En pantallas grandes van lado a lado
- - En pantallas pequeñas va una u otra
+/* Panel Based
+ - Any amount of panels
 */
-.twopanel {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  margin-left: 88px;
-  overflow: hidden;
+.panel-container {
+  position: relative;
+  width: 100%;
+}
+.panel-container .panel {
+  position: absolute;
+  width: inherit;
+  padding: 0 4px;
+  height: -moz-fit-content;
+  height: fit-content;
+  transition: transform var(--md-sys-motion-duration-long4) var(--md-sys-motion-easing-emphasized-decelerate), opacity var(--md-sys-motion-duration-long4) var(--md-sys-motion-easing-emphasized-decelerate);
+  opacity: 0;
+}
+.panel-container .panel.before {
+  transform: translateX(-100%);
+}
+.panel-container .panel.after {
+  transform: translateX(100%);
+}
+.panel-container .panel.show {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .panelcontainer {
@@ -7888,7 +7902,7 @@ span .icon::after {
   animation-name: md-appear 0.35s cubic-bezier(0.05, 0.7, 0.1, 1) reverse;
 }
 
-div.disabled {
+.disabled {
   pointer-events: none !important;
   opacity: 0.6 !important;
 }
@@ -7906,51 +7920,6 @@ div.disabled {
   align-items: center;
   border-radius: 16px;
   text-align: center;
-}
-
-#status {
-  border-radius: 16px;
-  color: var(--md-sys-color-background);
-  width: -moz-fit-content;
-  width: fit-content;
-  display: flex;
-  padding: 6px 16px 6px 13px;
-}
-#status::before {
-  font-family: "Material Symbols Rounded";
-  display: block;
-  line-height: inherit;
-  padding-right: 4px;
-  font-variation-settings: "FILL" 1, "wght" 600, "opsz" 20;
-  color: var(--md-sys-color-background);
-}
-[data-theme=dark] #status::before {
-  font-variation-settings: "FILL" 1, "wght" 500, "opsz" 20;
-}
-#status.current {
-  background-color: var(--md-custom-color-good);
-}
-#status.current::before {
-  content: "done";
-}
-#status.behind {
-  background-color: var(--md-custom-color-warning);
-}
-#status.behind::before {
-  content: "warning";
-}
-#status.delinquent {
-  background-color: var(--md-sys-color-error);
-}
-#status.delinquent::before {
-  content: "report";
-}
-
-/* FORMULARIO =================================================== */
-form {
-  display: flex;
-  margin: 0;
-  flex-direction: column;
 }
 
 /* TEXTFIELD BUSCADOR =========================== */
@@ -9269,10 +9238,6 @@ input[type=radio]:checked + .radiolabel:after {
   .searcharea.morph .searchsuggestions {
     margin-top: 64px;
   }
-  .panel #footer,
-  .button-fab + #footer {
-    margin-bottom: 72px;
-  }
 }
 /* Teléfonos móviles (sm) */
 @media only screen and (max-width: 700px) {
@@ -9292,10 +9257,6 @@ input[type=radio]:checked + .radiolabel:after {
   }
   .topbar .logo {
     justify-content: left;
-  }
-  .panel #footer,
-  .panel page-footer {
-    margin-bottom: 0;
   }
   .footer {
     margin-bottom: 60px;

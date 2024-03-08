@@ -8,9 +8,51 @@
         <link rel="stylesheet" type="text/css" href="materialpg.css" />
         <link rel="stylesheet" type="text/css" href="theme.css" />
         <script src="https://esm.run/@material/web/all.js" type="module"></script>
+        <script src="materialpg.js"></script>
     </head>
     <body>
-        <md-filled-button>Button</md-filled-button>
         <h1>Hello!</h1>
+        <div class="panel-container">
+            <div class="panel show">
+                <div class="card-elevated">
+                    <div class="cardcontent">This is panel 1</div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="card-elevated">
+                    <div class="cardcontent">
+                        This is panel 2
+                        <h1>CHULADA</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="card-elevated">
+                    <div class="cardcontent">This is panel 3</div>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="card-elevated">
+                    <div class="cardcontent">This is panel 4</div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-h">
+            <div class="button-elevated" id="tezt">Prevoius</div>
+            <div class="button-elevated" id="tezts">Next</div>
+        </div>
     </body>
+    <script>
+        const PanelContainer = new materialpg.PanelView(document.querySelector(".panel-container"), true);
+
+        const testButton = document.querySelector("#tezt");
+        const nextButton = document.querySelector("#tezts");
+
+        testButton.addEventListener("click", e => {
+            PanelContainer.previousPanel();
+        });
+        nextButton.addEventListener("click", e => {
+            PanelContainer.nextPanel();
+        });
+    </script>
 </html>

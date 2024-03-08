@@ -122,7 +122,7 @@ span .icon::after {
     animation-name: md-appear v.$durationMedium3 v.$easingEmphasizedDecelerate reverse;
 }
 
-div.disabled {
+.disabled {
     pointer-events: none !important;
     opacity: 0.6 !important;
 }
@@ -141,59 +141,6 @@ div.disabled {
     border-radius: 16px;
     text-align: center;
     @extend .label-md;
-}
-
-#status {
-    border-radius: 16px;
-    color: v.$colorBackground;
-    width: fit-content;
-    display: flex;
-    padding: 6px 16px 6px 13px;
-
-    &::before {
-        font-family: v.$materialSymbols;
-        display: block;
-        line-height: inherit;
-        padding-right: 4px;
-        font-variation-settings: "FILL" 1, "wght" 600, "opsz" 20;
-        color: v.$colorBackground;
-
-        [data-theme="dark"] & {
-            font-variation-settings: "FILL" 1, "wght" 500, "opsz" 20;
-        }
-    }
-
-    &.current {
-        background-color: var(--md-custom-color-good);
-
-        &::before {
-            content: "done";
-        }
-    }
-
-    &.behind {
-        background-color: var(--md-custom-color-warning);
-
-        &::before {
-            content: "warning";
-        }
-    }
-
-    &.delinquent {
-        background-color: v.$colorError;
-
-        &::before {
-            content: "report";
-        }
-    }
-}
-
-/* FORMULARIO =================================================== */
-
-form {
-    display: flex;
-    margin: 0;
-    flex-direction: column;
 }
 
 /* TEXTFIELD BUSCADOR =========================== */
@@ -1757,11 +1704,6 @@ input[type="radio"]:checked + .radiolabel {
             margin-top: 64px;
         }
     }
-
-    .panel #footer,
-    .button-fab + #footer {
-        margin-bottom: 72px;
-    }
 }
 
 /* Teléfonos móviles (sm) */
@@ -1783,13 +1725,6 @@ input[type="radio"]:checked + .radiolabel {
 
     .topbar .logo {
         justify-content: left;
-    }
-
-    .panel {
-        #footer,
-        page-footer {
-            margin-bottom: 0;
-        }
     }
 
     .footer {

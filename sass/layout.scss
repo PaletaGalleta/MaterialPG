@@ -515,17 +515,36 @@ $flexHRev: (
     text-overflow: ellipsis !important;
 }
 
-/* Basado en paneles
- - Dos paneles
- - En pantallas grandes van lado a lado
- - En pantallas pequeñas va una u otra
+/* Panel Based
+ - Any amount of panels
 */
-.twopanel {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    margin-left: 88px;
-    overflow: hidden;
+.panel-container {
+    position: relative;
+    width: 100%;
+
+    & .panel {
+        position: absolute;
+        width: inherit;
+        padding: 0 4px;
+        height: fit-content;
+        transition: transform var(--md-sys-motion-duration-long4) var(--md-sys-motion-easing-emphasized-decelerate),
+            opacity var(--md-sys-motion-duration-long4) var(--md-sys-motion-easing-emphasized-decelerate);
+
+        opacity: 0;
+
+        &.before {
+            transform: translateX(-100%);
+        }
+
+        &.after {
+            transform: translateX(100%);
+        }
+
+        &.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
 }
 .panelcontainer {
     height: 100%;

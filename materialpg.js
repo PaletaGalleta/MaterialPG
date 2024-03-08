@@ -1292,3 +1292,71 @@ materialpg.DataTable = class {
             });
     }
 };
+
+materialpg.PanelView = class {
+    /**
+     * Main constructor
+     *
+     * @param {Element} domElement The DOM element of the <div> where the panels are
+     */
+    constructor(domElement, circular = false) {
+        // Save DOM element
+        this.domElement = domElement;
+
+        // Set circular property
+        this.circular = circular;
+
+        this.panels = this.domElement.querySelectorAll(".panel");
+
+        if (this.panels.length == 0) return;
+
+        if (!this.domElement.querySelector(".panel.show")) this.panels[0].classList.add("show");
+
+        const shownPanel = Array.from(this.panels).indexOf(this.domElement.querySelector(".panel.show"));
+
+        this.setPanel(shownPanel);
+    }
+
+    setPanel(idx) {
+        if (idx < 0) {
+            this.setPanel(0);
+            return;
+        }
+        if (idx >= this.panels.length) {
+            this.setPanel(this.panels.length);
+            return;
+        }
+
+        this.currentPanel = idx;
+
+        this.panels.forEach((panel, idx) => {
+            panel.classList.remove("show");
+            panel.classList.remove("before");
+            panel.classList.remove("after");
+            if (idx < this.currentPanel) panel.classList.add("before");
+            if (idx > this.currentPanel) panel.classList.add("after");
+        });
+
+        this.panels[idx].classList.add("show");
+
+        // Update container height
+        this.updateContainerHeight();
+    }
+
+    nextPanel() {
+        if (this.currentPanel < this.panels.length - 1) this.setPanel(this.currentPanel + 1);
+        else if (this.circular) this.setPanel(0);
+    }
+
+    previousPanel() {
+        if (this.currentPanel > 0) this.setPanel(this.currentPanel - 1);
+        else if (this.circular) this.setPanel(this.panels.length - 1);
+    }
+
+    // Function to recalculate maximum height and update container
+    updateContainerHeight() {
+        const panelElement = this.panels[this.currentPanel];
+        this.domElement.style.height = `${panelElement.offsetHeight}px`;
+        console.log("updating height to " + panelElement.offsetHeight);
+    }
+};
