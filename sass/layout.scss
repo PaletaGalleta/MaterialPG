@@ -521,14 +521,14 @@ $flexHRev: (
 .panel-container {
     position: relative;
     width: 100%;
-    overflow-x: hidden;
+    overflow: hidden;
 
     & .panel {
         position: absolute;
         width: inherit;
         height: fit-content;
         padding: 4px;
-        transition: transform v.$durationXLong4 v.$easingEmphasized, opacity v.$durationLong4 v.$easingEmphasized;
+        transition: transform v.$durationXLong2 v.$easingEmphasized, opacity v.$durationLong4 v.$easingEmphasized;
 
         opacity: 0;
 
@@ -544,62 +544,6 @@ $flexHRev: (
             opacity: 1;
             transform: translateX(0);
         }
-    }
-}
-.panelcontainer {
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    padding-bottom: 58px;
-    margin-top: 64px;
-
-    & .panel {
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-        padding: 8px;
-        transition: transform var(--md-sys-motion-duration-long3) var(--md-sys-motion-easing-emphasized-decelerate),
-            opacity var(--md-sys-motion-duration-medium3) var(--md-sys-motion-easing-emphasized-decelerate);
-    }
-}
-
-/* Pantallas Pequeñas (md) */
-@media only screen and (max-width: 1000px) {
-    .panelcontainer .panel {
-        opacity: 1;
-        /* z-index: ; */
-    }
-
-    .panelcontainer .panel[hidden] {
-        opacity: 0;
-        pointer-events: none;
-        /* display: none; */
-        /* transform: translateX(0); */
-    }
-
-    .panelcontainer .panel#panel1[hidden] {
-        /* display: none; */
-        transform: translateX(-30%);
-    }
-
-    .panelcontainer .panel#panel2[hidden] {
-        /* display: none; */
-        transform: translateX(-70%);
-    }
-
-    .panelcontainer .panel#panel2:not([hidden]) {
-        /* display: none; */
-        transform: translateX(-100%);
-    }
-}
-
-/* Teléfonos móviles (sm) */
-@media only screen and (max-width: 700px) {
-    .twopanel {
-        margin-left: 0;
-    }
-    .panelcontainer {
-        padding-bottom: 144px;
     }
 }
 
