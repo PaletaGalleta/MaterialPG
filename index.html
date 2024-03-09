@@ -12,10 +12,6 @@
     </head>
     <body>
         <h1>Hello!</h1>
-        <div class="d-flex flex-h">
-            <div class="button-elevated" id="tezt">Prevoius</div>
-            <div class="button-elevated" id="tezts">Next</div>
-        </div>
         <div class="panel-container">
             <div class="panel show">
                 <div class="card-elevated">
@@ -24,10 +20,7 @@
             </div>
             <div class="panel">
                 <div class="card-elevated">
-                    <div class="cardcontent">
-                        This is panel 2
-                        <h1>CHULADA</h1>
-                    </div>
+                    <div class="cardcontent">This is panel 2</div>
                 </div>
             </div>
             <div class="panel">
@@ -41,9 +34,15 @@
                 </div>
             </div>
         </div>
+        <div class="d-flex flex-h">
+            <div class="button-elevated" id="tezt">Previous</div>
+            <div class="button-elevated" id="tezts">Next</div>
+        </div>
     </body>
     <script>
-        const PanelContainer = new materialpg.PanelView(document.querySelector(".panel-container"), true);
+        const PanelContainer = new materialpg.PanelView(document.querySelector(".panel-container"), {
+            navigation: true,
+        });
 
         const testButton = document.querySelector("#tezt");
         const nextButton = document.querySelector("#tezts");

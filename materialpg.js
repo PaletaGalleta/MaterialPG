@@ -66,10 +66,10 @@ function initialize() {
 }
 
 /**
- * Cambia el tema y establece una variable en localStorage para ver el mismo tema entre páginas
+ * Switches between light and dark themes.
  */
 function switchTheme() {
-    // Seleccionar el switch de modo oscuro
+    // Select the dark mode switch
     const switchDarkMode = document.getElementById("themeswitch").querySelector(".item");
     if (document.documentElement.getAttribute("data-theme") != "dark") {
         localStorage.setItem("theme", "dark");
@@ -85,25 +85,25 @@ function switchTheme() {
 }
 
 /**
- * Verificar si el usuario tiene activo el modo oscuro
+ * Detects the preferred color scheme and sets it accordingly.
  */
 function detectColorScheme() {
-    let theme = "light"; // Modo Claro por defecto
+    let theme = "light"; // Default to Light Mode
 
-    // Se utiliza localStorage para sobreescribir los ajustes del SO
+    // Use localStorage to override OS settings
     if (localStorage.getItem("theme")) {
         if (localStorage.getItem("theme") == "dark") {
             theme = "dark";
         }
     } else if (!window.matchMedia) {
-        // Metodo matchMedia no soportado
+        // matchMedia method not supported
         return false;
     } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        // El tema del SO es oscuro
+        // OS theme is dark
         theme = "dark";
     }
 
-    // Se prefiere el tema oscuro, establecer el documento con [data-theme=dark]
+    // Prefer dark theme, set document with [data-theme=dark]
     if (theme == "dark") {
         document.documentElement.setAttribute("data-theme", "dark");
     }
@@ -419,20 +419,20 @@ function loadComponents() {
 }
 
 /**
- *
- * @param {HTMLInputElement} textInput
+ * Verifies the validity of a text input element and sets its error state if necessary.
+ * @param {HTMLInputElement} textInput - The text input element to verify.
  */
 function verifyValidity(textInput) {
     const textField = textInput.closest(`[class*="textfield-"]`);
     let isValid = textInput.validity.valid;
 
-    // Establecer Error
+    // Set Error
     if (textInput.value.length == 0) {
         setTextFieldError(textInput, null);
         return;
     }
 
-    // Verificación de Contraseñas
+    // Password Verification
     if (textInput.name == "password-confirm") {
         const passForm = textField.closest("form");
         if (passForm) {
@@ -451,10 +451,9 @@ function verifyValidity(textInput) {
 }
 
 /**
- * Sets the error of a textfield
- *
- * @param {HTMLInputElement} textInput The desired text input
- * @param {string | null} errorMsg The error to display, if its `undefined`, it clears the error
+ * Sets the error state and message for a text field.
+ * @param {HTMLInputElement} textInput - The text input element.
+ * @param {string|null} [errorMsg=null] - The error message to display. If null, clears the error state.
  */
 function setTextFieldError(textInput, errorMsg = null) {
     const isValid = errorMsg == null;
@@ -468,25 +467,29 @@ function setTextFieldError(textInput, errorMsg = null) {
     if (placeholder) {
         if (isValid || textInput.value.length == 0) {
             if (placeholder.hasAttribute("data-normal")) {
-                // Poner texto normal en el placeholder
+                // Set normal text in the placeholder
                 placeholder.innerHTML = placeholder.dataset.normal;
             } else if (placeholder.hasAttribute("data-error") == placeholder.innerHTML) {
-                // No poner nada (no habia texto antes del error)
+                // Clear placeholder (no text before error)
                 placeholder.innerHTML = "";
             }
         } else {
-            // Existe mensaje de error
+            // Error message exists
             if (!placeholder.dataset.normal && errorMsg != placeholder.innerHTML) {
-                // Tiene texto, guardar en data-normal
+                // Text exists, store it in data-normal
                 placeholder.dataset.normal = placeholder.innerHTML;
             }
-            // Poner texto de error en el placeholder
+            // Set error message text in the placeholder
             placeholder.innerHTML = errorMsg;
         }
     }
 }
 
-// Define a callback function to handle the intersection
+/**
+ * Handles intersection observer entries and applies animations to the intersecting elements.
+ * @param {IntersectionObserverEntry[]} entries - An array of intersection observer entries.
+ * @param {IntersectionObserver} observer - The intersection observer instance.
+ */
 function handleIntersection(entries, observer) {
     entries.forEach(entry => {
         // Get the value of the data-anim attribute
@@ -499,24 +502,24 @@ function handleIntersection(entries, observer) {
                 // When the element becomes visible, add the specified class
                 entry.target.classList.add(customClass);
                 // Unobserve the element to stop further callbacks
+                observer.unobserve(entry.target);
             }
-            observer.unobserve(entry.target);
         }
     });
 }
 
 /**
- * Adds or removes a class (or class array) to a specific element, depending on a specific condition
- *
- * @param {boolean} condition - The condition which defines if the class ir added or removed
- * @param {Element} element - The element affected by the class
- * @param {(string|string[])} class2add - The class, or class array to be added or removed to the element
+ * Sets or removes a CSS class from an HTML element based on a condition.
+ * @param {boolean} condition - The condition to determine whether to add or remove the class.
+ * @param {HTMLElement} element - The HTML element to which the class will be added or removed.
+ * @param {string|string[]} class2add - The CSS class(es) to add or remove.
  */
 function setClass(condition, element, class2add) {
     // Check if element exists
     if (element) {
         // Check if the condition is true or false
         if (condition) {
+            // Check if class2add is a string or an array
             if (typeof class2add === "string") {
                 element.classList.add(class2add);
             } else if (Array.isArray(class2add)) {
@@ -525,6 +528,7 @@ function setClass(condition, element, class2add) {
                 });
             }
         } else {
+            // Check if class2add is a string or an array
             if (typeof class2add === "string") {
                 element.classList.remove(class2add);
             } else if (Array.isArray(class2add)) {
@@ -536,6 +540,11 @@ function setClass(condition, element, class2add) {
     }
 }
 
+/**
+ * Checks if the provided string represents a valid file path.
+ * @param {string} str - The string to be tested.
+ * @returns {boolean} Returns true if the string represents a valid file path, otherwise false.
+ */
 function isPath(str) {
     // Define a regular expression for a simple file path (adjust as needed)
     var pathRegex = /^(\/?[a-zA-Z0-9_-]+)+\/?$/;
@@ -807,7 +816,21 @@ materialpg.ProductView = class {
     }
 };
 
+/**
+ * Represents a modal dialog.
+ * @class
+ */
 materialpg.Modal = class {
+    /**
+     * Creates an instance of Modal.
+     * @constructor
+     * @param {string} querySel - The CSS selector to find the modal element.
+     * @param {Object} [options={}] - Optional configuration options.
+     * @param {boolean} [options.backdrop=true] - Includes a modal-backdrop element. Alternatively, specify static for a backdrop which doesn’t close the modal when clicked.
+     * @param {boolean} [options.focus=true] - Puts the focus on the modal when initialized.
+     * @param {boolean} [options.keyboard=true] - Closes the modal when escape key is pressed.
+     * @throws {Error} Throws an error if the modal element or dialog is not found.
+     */
     constructor(querySel, options = {}) {
         this.domElement = document.querySelector(querySel);
         if (!this.domElement) throw new Error("Modal element not found");
@@ -815,15 +838,19 @@ materialpg.Modal = class {
         this.domDialog = this.domElement.querySelector(".modal-dialog");
         if (!this.domDialog) throw new Error("Modal dialog not found");
 
+        /**
+         * Event options for dispatching events.
+         * @type {Object}
+         * @property {boolean} bubbles - Whether the event bubbles up through the DOM tree.
+         * @property {boolean} cancelable - Whether the event can be canceled.
+         */
         this.evtOptions = {
-            bubbles: false, // Whether the event bubbles up through the DOM tree
-            cancelable: false, // Whether the event can be canceled
+            bubbles: false,
+            cancelable: false,
         };
-        // Includes a modal-backdrop element. Alternatively, specify static for a backdrop which doesn’t close the modal when clicked.
+
         this.backdrop = options.backdrop || true;
-        // Puts the focus on the modal when initialized.
         this.focus = options.focus || true;
-        // Closes the modal when escape key is pressed.
         this.keyboard = options.keyboard || true;
 
         this.isShown = this.domElement.classList.contains("show");
@@ -837,14 +864,24 @@ materialpg.Modal = class {
         });
     }
 
+    /**
+     * Removes the modal element from the DOM.
+     */
     dispose() {
         this.domElement.remove();
     }
 
+    /**
+     * Gets the DOM element of the modal.
+     * @returns {HTMLElement} The modal DOM element.
+     */
     getInstance() {
         return this.domElement;
     }
 
+    /**
+     * Shows the modal.
+     */
     show() {
         this.domElement.addEventListener(
             "animationend",
@@ -867,6 +904,9 @@ materialpg.Modal = class {
         });
     }
 
+    /**
+     * Hides the modal.
+     */
     hide() {
         this.domElement.addEventListener(
             "animationend",
@@ -881,6 +921,9 @@ materialpg.Modal = class {
         this.isShown = false;
     }
 
+    /**
+     * Toggles the visibility of the modal.
+     */
     toggle() {
         this.isShown ? this.hide() : this.show();
     }
@@ -1299,42 +1342,91 @@ materialpg.PanelView = class {
      *
      * @param {Element} domElement The DOM element of the <div> where the panels are
      */
-    constructor(domElement, circular = false) {
+    constructor(domElement, config = {}) {
         // Save DOM element
         this.domElement = domElement;
 
         // Set circular property
-        this.circular = circular;
+        this.isCircular = config.circular || false;
+        this.hasNavigation = config.navigation || false;
 
         this.panels = this.domElement.querySelectorAll(".panel");
+        this.prevPanelStack = [];
+        this.nextPanelStack = [];
 
         if (this.panels.length == 0) return;
 
-        if (!this.domElement.querySelector(".panel.show")) this.panels[0].classList.add("show");
+        this.currentPanelIdx = -1;
+        this.setPanel(0);
 
-        const shownPanel = Array.from(this.panels).indexOf(this.domElement.querySelector(".panel.show"));
+        // Bind this object to event handlers
+        this.handlePopState = this.handlePopState.bind(this);
 
-        this.setPanel(shownPanel);
+        // Listen for the popstate event
+        window.addEventListener("popstate", this.handlePopState);
+    }
+
+    handlePopState(event) {
+        // Check if state exists and it has the panel index
+        if (event.state && typeof event.state.panelIndex === "number") {
+            // Set the panel to the previous state's panel index
+            this.showPanel(event.state.panelIndex);
+            console.log(`Retrieving ${event.state.panelIndex}`);
+        }
     }
 
     setPanel(idx) {
+        // Check if its more or less than what it is right now
+        if (idx < this.currentPanelIdx) {
+            // Previous panel
+            if (!this.hasNavigation) {
+                if (idx >= 0) this.showPanel(idx);
+                else if (this.isCircular) this.showPanel(this.panels.length - 1);
+            } else {
+                if (idx >= 0) {
+                    // Pop current state from the stack before changing panel
+                    history.back();
+                }
+            }
+        } else if (idx > this.currentPanelIdx) {
+            // Next panel
+            if (!this.hasNavigation) {
+                if (idx < this.panels.length) this.showPanel(idx);
+                else if (this.isCircular) this.showPanel(0);
+            } else {
+                if (idx < this.panels.length) {
+                    // Add current panel to the stack
+                    this.prevPanelStack.push(this.currentPanelIdx);
+
+                    // Save current state before changing panel, if nav is enabled
+                    history.pushState({panelIndex: idx}, "", window.location.href);
+
+                    console.log(`Adding ${this.currentPanelIdx}`);
+
+                    this.showPanel(idx);
+                }
+            }
+        }
+    }
+
+    showPanel(idx) {
         if (idx < 0) {
-            this.setPanel(0);
+            this.showPanel(0);
             return;
         }
         if (idx >= this.panels.length) {
-            this.setPanel(this.panels.length);
+            this.showPanel(this.panels.length - 1);
             return;
         }
 
-        this.currentPanel = idx;
+        this.currentPanelIdx = idx;
 
         this.panels.forEach((panel, idx) => {
             panel.classList.remove("show");
             panel.classList.remove("before");
             panel.classList.remove("after");
-            if (idx < this.currentPanel) panel.classList.add("before");
-            if (idx > this.currentPanel) panel.classList.add("after");
+            if (idx < this.currentPanelIdx) panel.classList.add("before");
+            if (idx > this.currentPanelIdx) panel.classList.add("after");
         });
 
         this.panels[idx].classList.add("show");
@@ -1343,19 +1435,18 @@ materialpg.PanelView = class {
         this.updateContainerHeight();
     }
 
+    // Override nextPanel and previousPanel methods to utilize history manipulation
     nextPanel() {
-        if (this.currentPanel < this.panels.length - 1) this.setPanel(this.currentPanel + 1);
-        else if (this.circular) this.setPanel(0);
+        this.setPanel(this.currentPanelIdx + 1);
     }
 
     previousPanel() {
-        if (this.currentPanel > 0) this.setPanel(this.currentPanel - 1);
-        else if (this.circular) this.setPanel(this.panels.length - 1);
+        this.setPanel(this.currentPanelIdx - 1);
     }
 
     // Function to recalculate maximum height and update container
     updateContainerHeight() {
-        const panelElement = this.panels[this.currentPanel];
+        const panelElement = this.panels[this.currentPanelIdx];
         this.domElement.style.height = `${panelElement.offsetHeight + 4}px`;
     }
 
@@ -1363,5 +1454,10 @@ materialpg.PanelView = class {
     updateContainerMaxHeight() {
         const maxHeight = Math.max(...Array.from(this.panels).map(child => child.offsetHeight));
         this.domElement.style.height = `${maxHeight + 4}px`;
+    }
+
+    // Don't forget to clean up event listeners when the object is destroyed
+    destroy() {
+        window.removeEventListener("popstate", this.handlePopState);
     }
 };
