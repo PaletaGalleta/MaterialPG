@@ -1336,11 +1336,18 @@ materialpg.DataTable = class {
     }
 };
 
+/**
+ * Represents a panel view with navigation functionality.
+ * @class
+ */
 materialpg.PanelView = class {
     /**
-     * Main constructor
-     *
-     * @param {Element} domElement The DOM element of the <div> where the panels are
+     * Creates an instance of PanelView.
+     * @constructor
+     * @param {Element} domElement - The DOM element of the <div> where the panels are.
+     * @param {Object} [config={}] - Optional configuration settings.
+     * @param {boolean} [config.circular=false] - Indicates whether the panel navigation is circular.
+     * @param {boolean} [config.navigation=false] - Indicates whether navigation controls are enabled.
      */
     constructor(domElement, config = {}) {
         // Save DOM element
@@ -1366,6 +1373,10 @@ materialpg.PanelView = class {
         window.addEventListener("popstate", this.handlePopState);
     }
 
+    /**
+     * Handles the popstate event.
+     * @param {Event} event - The popstate event object.
+     */
     handlePopState(event) {
         // Check if state exists and it has the panel index
         if (event.state && typeof event.state.panelIndex === "number") {
@@ -1375,8 +1386,12 @@ materialpg.PanelView = class {
         }
     }
 
+    /**
+     * Sets the current panel index.
+     * @param {number} idx - The index of the panel to set.
+     */
     setPanel(idx) {
-        // Check if its more or less than what it is right now
+        // Check if it's more or less than the current index
         if (idx < this.currentPanelIdx) {
             // Previous panel
             if (!this.hasNavigation) {
@@ -1409,6 +1424,10 @@ materialpg.PanelView = class {
         }
     }
 
+    /**
+     * Shows the panel at the specified index.
+     * @param {number} idx - The index of the panel to show.
+     */
     showPanel(idx) {
         if (idx < 0) {
             this.showPanel(0);
@@ -1435,28 +1454,39 @@ materialpg.PanelView = class {
         this.updateContainerHeight();
     }
 
-    // Override nextPanel and previousPanel methods to utilize history manipulation
+    /**
+     * Switches to the next panel.
+     */
     nextPanel() {
         this.setPanel(this.currentPanelIdx + 1);
     }
 
+    /**
+     * Switches to the previous panel.
+     */
     previousPanel() {
         this.setPanel(this.currentPanelIdx - 1);
     }
 
-    // Function to recalculate maximum height and update container
+    /**
+     * Recalculates the maximum height and updates the container.
+     */
     updateContainerHeight() {
         const panelElement = this.panels[this.currentPanelIdx];
         this.domElement.style.height = `${panelElement.offsetHeight + 4}px`;
     }
 
-    // Function to recalculate maximum height and update container
+    /**
+     * Recalculates the maximum height and updates the container.
+     */
     updateContainerMaxHeight() {
         const maxHeight = Math.max(...Array.from(this.panels).map(child => child.offsetHeight));
         this.domElement.style.height = `${maxHeight + 4}px`;
     }
 
-    // Don't forget to clean up event listeners when the object is destroyed
+    /**
+     * Cleans up event listeners when the object is destroyed.
+     */
     destroy() {
         window.removeEventListener("popstate", this.handlePopState);
     }
