@@ -9,29 +9,28 @@
 document.addEventListener("DOMContentLoaded", initialize);
 
 /**
- * Inicializa los funcionamientos principales de cualquier pagina del sitio
- * - Carga el Panel de Navegacion
- * - Listener para cambiar el tema
- * - Establece el icono correcto
- * - Crea el area de notificacion
+ * Initializes the framework by loading components, detecting color scheme, and setting up event listeners.
  */
 function initialize() {
+    // Load Components
     loadComponents();
+
+    // Detect Color Scheme
     detectColorScheme();
 
-    // Listener para cambiar tema
+    // Listener for theme switch
     const themeSwitches = document.querySelectorAll("#themeswitch");
     themeSwitches.forEach(themeSwitch => themeSwitch.addEventListener("click", switchTheme));
 
-    // Si el tema ya esta en Modo Oscuro, establecer el icono correctamente
+    // Set theme switch icon if already in Dark Mode
     if (document.documentElement.getAttribute("data-theme") == "dark") {
-        document.getElementById("themeswitch").querySelector(".item").innerHTML = `dark_mode<span class="desc">Modo Claro</span>`;
+        document.getElementById("themeswitch").querySelector(".item").innerHTML = `dark_mode<span class="desc">Light Mode</span>`;
     }
 
-    // Crear el area de notificacion
+    // Create notification area
     const notification = document.createElement("div");
     notification.classList.add("notification");
-    // Agregar al body
+    // Append to body
     document.body.prepend(notification);
 
     const topBar = document.querySelector(".top-bar");
@@ -62,6 +61,7 @@ function initialize() {
         observer.observe(elem);
     });
 
+    // Dispatch event to signify MaterialPG initialization
     document.dispatchEvent(new Event("MaterialPGInitialized"));
 }
 
@@ -110,22 +110,21 @@ function detectColorScheme() {
 }
 
 /**
- * Carga las funcionalidades de todos los componentes de Material
- *
- * - Ripple en clickables
- * - Abrir y cerrar acordeones
- * - Activar-desactivar filter chips
- * - Funciones de la barra de busqueda
+ * Initializes event listeners and sets up interactive components.
  */
 function loadComponents() {
-    // Handler para Clicks
+    // Handler for Clicks
     document.addEventListener(
         "click",
+        /**
+         * Event listener function for click events.
+         * @param {MouseEvent} event - The click event object.
+         */
         event => {
-            // Guardar el elemento objetivo
+            // Save the target element
             const trg = event.target;
 
-            // Elemento Accordion
+            // Accordion Element
             if (trg.closest(".accordion-title")) {
                 let accordion = trg.closest(".accordion");
                 if (!accordion) accordion = trg.closest(".cardaccordion");
@@ -133,60 +132,59 @@ function loadComponents() {
                 accordion.classList.toggle("open");
             }
 
-            // Elemento Search Bar
+            // Search Bar Element
             if (trg.closest(".searcharea")) {
-                // Capturar Area de Texto
+                // Capture Text Area
                 const searchArea = trg.closest(".searcharea");
 
-                // Boton para limpiar
+                // Clear Button
                 if (trg.closest("#cleartext")) {
-                    // Borrar texto del cuadro de busqueda
+                    // Clear search field
                     const searchField = searchArea.querySelector(".searchfield");
                     if (searchField) searchField.value = "";
 
-                    // Ocultar el boton
+                    // Hide the clear button
                     trg.closest("#cleartext").classList.add("hidden");
 
                     const searchSug = searchArea.querySelector(".searchsuggestions");
                     if (searchSug) {
-                        // Eliminar Sugerencias
+                        // Clear Suggestions
                         searchSug.innerHTML = "";
-                        // Ocultar las sugerencias
+                        // Hide Suggestions
                         searchSug.classList.remove("show");
                     }
                 }
             }
 
-            // Visibilidad de contraseñas
+            // Password Visibility
             if (trg.closest("#showpassword")) {
-                // Obtener el input
+                // Get the input
                 const passBtn = trg.closest("#showpassword");
                 const inputField = passBtn.parentElement.querySelector("input");
 
-                // Si es password, poner text y cambiar el icono
+                // Toggle visibility
                 if (inputField.type == "password") {
                     inputField.type = "text";
-                    passBtn.title = "Ocultar Contraseña";
+                    passBtn.title = "Hide Password";
                     passBtn.innerHTML = "visibility_off";
                 } else {
                     inputField.type = "password";
-                    passBtn.title = "Mostrar Contraseña";
+                    passBtn.title = "Show Password";
                     passBtn.innerHTML = "visibility";
                 }
-                // Si es text, pones password y cambiar el icono
             }
 
-            // Visibilidad de contraseñas
+            // Share Button
             if (trg.closest("#shareButton")) {
                 // URL to share
-                var urlToShare = window.location.href;
+                const urlToShare = window.location.href;
 
                 // Check if the browser supports the Web Share API
                 if (navigator.share) {
                     navigator
                         .share({
                             title: document.title,
-                            text: "Mira lo que encontré:",
+                            text: "Check this out:",
                             url: urlToShare,
                         })
                         .then(() => {
@@ -212,9 +210,7 @@ function loadComponents() {
                     // Remove the temporary element
                     document.body.removeChild(textArea);
 
-                    alert(
-                        `La opción de compartir no está admitida por el explorador. Se ha copiado el enlace ${urlToShare} al portapapeles`
-                    );
+                    alert(`Sharing is not supported by the browser. The link ${urlToShare} has been copied to the clipboard`);
                 }
             }
 
@@ -244,9 +240,13 @@ function loadComponents() {
         true
     );
 
-    // Mousedown
+    // Handler for Mousedown
     document.addEventListener(
         "mousedown",
+        /**
+         * Event listener function for mousedown events.
+         * @param {MouseEvent} event - The mousedown event object.
+         */
         event => {
             const trg = event.target;
             if (trg.closest('[class*="button-"], .listitem, .toolbar .button, .Chip, .accordion-title')) {
@@ -267,110 +267,103 @@ function loadComponents() {
         true
     );
 
-    document.addEventListener("focusin", event => {
-        const trg = event.target;
-        if (trg.matches("input.searchfield")) {
-            const searchArea = event.target.closest(".searcharea");
-            // Mostrar las sugerencias
-            if (searchArea) {
-                const searchSug = searchArea.querySelector(".searchsuggestions");
-                if (searchSug && searchSug.childElementCount > 0) {
-                    searchSug.classList.add("show");
-                }
-            }
-        } else if (trg.matches(`[class*="textfield-"] input, [class*="textfield-"] textarea, [class*="textfield-"] select`)) {
-            verifyValidity(trg);
-        }
-    });
-
-    document.addEventListener("focusout", event => {
-        // Guardar el elemento objetivo
-        const trg = event.target;
-
-        if (trg.matches(`[class*="textfield-"] input, [class*="textfield-"] textarea, [class*="textfield-"] select`)) {
-            const parent = trg.closest(`[class*="textfield-"]`);
-            if (trg.value.length > 0) {
-                // Trim
-                trg.value = trg.value.trim();
-
-                if (trg.dataset.mdpgInput) {
-                    const inputType = trg.dataset.mdpgInput;
-
-                    // If its MONEY, format the 2 decimals
-                    if (inputType == "money") {
-                        // The current value
-                        const number = +trg.value;
-
-                        // Convert the number to a formatted currency string
-                        const formattedCurrency = number.toFixed(2);
-
-                        // Set the value inside the input field
-                        trg.value = formattedCurrency;
+    // Handler for FocusIn
+    document.addEventListener(
+        "focusin",
+        /**
+         * Event listener function for focusin events.
+         * @param {FocusEvent} event - The focusin event object.
+         */
+        event => {
+            const trg = event.target;
+            if (trg.matches("input.searchfield")) {
+                const searchArea = event.target.closest(".searcharea");
+                // Show suggestions
+                if (searchArea) {
+                    const searchSug = searchArea.querySelector(".searchsuggestions");
+                    if (searchSug && searchSug.childElementCount > 0) {
+                        searchSug.classList.add("show");
                     }
                 }
-
-                if (!trg.validity.valid) {
-                    if (parent) parent.classList.add("open");
-                    verifyValidity(trg);
-                }
-            } else {
-                if (parent && !parent.classList.contains("openlock")) parent.classList.remove("open");
+            } else if (trg.matches(`[class*="textfield-"] input, [class*="textfield-"] textarea, [class*="textfield-"] select`)) {
+                verifyValidity(trg);
             }
-        } else if (trg.matches(".searchfield")) {
-            const searchArea = trg.closest(".searcharea");
-            // Ocultar las sugerencias
-            if (searchArea) {
-                const searchSug = searchArea.querySelector(".searchsuggestions.show");
-                if (searchSug) {
-                    setTimeout(() => {
-                        searchSug.classList.remove("show");
-                    }, 200);
+        }
+    );
+
+    // Handler for FocusOut
+    document.addEventListener(
+        "focusout",
+        /**
+         * Event listener function for focusout events.
+         * @param {FocusEvent} event - The focusout event object.
+         */
+        event => {
+            // Save the target element
+            const trg = event.target;
+
+            if (trg.matches(`[class*="textfield-"] input, [class*="textfield-"] textarea, [class*="textfield-"] select`)) {
+                const parent = trg.closest(`[class*="textfield-"]`);
+                if (trg.value.length > 0) {
+                    // Trim
+                    trg.value = trg.value.trim();
+
+                    if (trg.dataset.mdpgInput) {
+                        const inputType = trg.dataset.mdpgInput;
+
+                        // If it's MONEY, format to 2 decimals
+                        if (inputType == "money") {
+                            // The current value
+                            const number = +trg.value;
+
+                            // Convert to a formatted currency string
+                            const formattedCurrency = number.toFixed(2);
+
+                            // Set the value inside the input field
+                            trg.value = formattedCurrency;
+                        }
+                    }
+
+                    if (!trg.validity.valid) {
+                        if (parent) parent.classList.add("open");
+                        verifyValidity(trg);
+                    }
+                } else {
+                    if (parent && !parent.classList.contains("openlock")) parent.classList.remove("open");
+                }
+            } else if (trg.matches(".searchfield")) {
+                const searchArea = trg.closest(".searcharea");
+                // Hide suggestions
+                if (searchArea) {
+                    const searchSug = searchArea.querySelector(".searchsuggestions.show");
+                    if (searchSug) {
+                        setTimeout(() => {
+                            searchSug.classList.remove("show");
+                        }, 200);
+                    }
                 }
             }
         }
-    });
+    );
 
-    // Handler para inputs
-    document.addEventListener("input", event => {
-        if (event.target.matches(`[class*="textfield-"] input, [class*="textfield-"] textarea, [class*="textfield-"] select`)) {
-            const field = event.target;
-            const parent = field.closest(`[class*="textfield-"]`);
+    // Handler for Inputs
+    document.addEventListener(
+        "input",
+        /**
+         * Event listener function for input events.
+         * @param {InputEvent} event - The input event object.
+         */
+        event => {
+            if (
+                event.target.matches(`[class*="textfield-"] input, [class*="textfield-"] textarea, [class*="textfield-"] select`)
+            ) {
+                const field = event.target;
+                const parent = field.closest(`[class*="textfield-"]`);
 
-            // if (field.value.length > 0) field.value = field.value.replace(/^\s+|\s{2,}/g, "");
-
-            verifyValidity(field);
-            if (parent) parent.classList.add("open");
-
-            // Verificar maxlength en input type="number"
-            if (field.type == "number" && !field.dataset.mdpgInput) {
-                let maxLength = field.getAttribute("maxlength");
-
-                if (maxLength) {
-                    maxLength = +maxLength;
-                    event.preventDefault();
-                    field.value = field.value.slice(0, maxLength);
-                }
-            }
-
-            if (field.matches(`[class*="textfield-"] input, [class*="textfield-"] textarea`)) {
-                // Check if field has a counter
-                const counter = parent.querySelector(".counter");
-
-                if (counter) {
-                    // Counter exists
-
-                    // Get maxlength
-                    const maxLength = field.maxLength;
-
-                    // Get input length
-                    const inputLength = field.value.length;
-
-                    counter.innerHTML = `${inputLength}/${maxLength}`;
-                }
                 verifyValidity(field);
                 if (parent) parent.classList.add("open");
 
-                // Verificar maxlength en input type="number"
+                // Check maxlength for input type="number"
                 if (field.type == "number" && !field.dataset.mdpgInput) {
                     let maxLength = field.getAttribute("maxlength");
 
@@ -380,14 +373,44 @@ function loadComponents() {
                         field.value = field.value.slice(0, maxLength);
                     }
                 }
-            }
-        } else if (event.target.matches(`.searchfield`)) {
-            const field = event.target;
 
-            const clearBtn = field.parentElement.querySelector("#cleartext");
-            if (clearBtn) setClass(field.value.length == 0, clearBtn, "hidden");
+                if (field.matches(`[class*="textfield-"] input, [class*="textfield-"] textarea`)) {
+                    // Check if field has a counter
+                    const counter = parent.querySelector(".counter");
+
+                    if (counter) {
+                        // Counter exists
+
+                        // Get maxlength
+                        const maxLength = field.maxLength;
+
+                        // Get input length
+                        const inputLength = field.value.length;
+
+                        counter.innerHTML = `${inputLength}/${maxLength}`;
+                    }
+                    verifyValidity(field);
+                    if (parent) parent.classList.add("open");
+
+                    // Check maxlength for input type="number"
+                    if (field.type == "number" && !field.dataset.mdpgInput) {
+                        let maxLength = field.getAttribute("maxlength");
+
+                        if (maxLength) {
+                            maxLength = +maxLength;
+                            event.preventDefault();
+                            field.value = field.value.slice(0, maxLength);
+                        }
+                    }
+                }
+            } else if (event.target.matches(`.searchfield`)) {
+                const field = event.target;
+
+                const clearBtn = field.parentElement.querySelector("#cleartext");
+                if (clearBtn) setClass(field.value.length == 0, clearBtn, "hidden");
+            }
         }
-    });
+    );
 
     //* Carousels
     // Get all carousels
@@ -610,60 +633,148 @@ function showSnackbar(content, timeout = 5000) {
 
 var materialpg = {};
 
+/**
+ * Class representing a carousel.
+ */
 materialpg.Carousel = class {
+    /**
+     * Creates a carousel instance.
+     * @param {HTMLElement} element - The HTML element representing the container of the carousel.
+     * @param {number} [timer=5000] - The duration of each item transition in milliseconds. Defaults to 5000ms (5 seconds).
+     */
     constructor(element, timer = 5000) {
+        /**
+         * The DOM element representing the container of the carousel.
+         * @type {HTMLElement}
+         */
         this.domElement = element;
+
+        /**
+         * The collection of child elements representing individual items in the carousel.
+         * @type {NodeList}
+         */
         this.children = element.querySelectorAll(".carouselimg");
+
+        /**
+         * The index of the currently displayed item.
+         * @type {number}
+         */
         this.currentItem = 0;
+
+        /**
+         * The duration of each item transition in milliseconds.
+         * @type {number}
+         */
         this.timer = this.domElement.dataset.mdpgTime ? this.domElement.dataset.mdpgTime : timer;
+
+        // Initialize the carousel by displaying the first item
         this.showItem(0);
     }
 
+    /**
+     * Displays the item with the specified index.
+     * @param {number} num - The index of the item to display.
+     */
     showItem(num) {
+        // Ensure the index is within the valid range
         if (num >= this.children.length) num = 0;
         if (num < 0) num = this.children.length - 1;
+
+        // Remove all size-related classes from all items
         for (let i = 0; i < this.children.length; i++) {
             this.children[i].classList.remove("large");
             this.children[i].classList.remove("medium");
             this.children[i].classList.remove("small");
         }
 
+        // Add size-related classes to the current, previous, and next items
         this.children[num].classList.add("large");
         if (this.children[num - 1]) this.children[num - 1].classList.add("medium");
         if (this.children[num + 1]) this.children[num + 1].classList.add("medium");
         if (this.children[num - 2]) this.children[num - 2].classList.add("small");
         if (this.children[num + 2]) this.children[num + 2].classList.add("small");
 
+        // Update the index of the current item
         this.currentItem = num;
+
+        // Set a timeout to transition to the next item after the specified duration
         setTimeout(() => this.nextItem(), this.timer);
     }
 
+    /**
+     * Displays the next item in the carousel.
+     */
     nextItem() {
+        // Display the next item by calling showItem() with the index of the next item
         this.showItem(this.currentItem + 1);
     }
 };
 
+/**
+ * Class representing a slideshow.
+ */
 materialpg.Slideshow = class {
+    /**
+     * Creates a slideshow instance.
+     * @param {HTMLElement} element - The HTML element representing the container of the slideshow.
+     * @param {number} [timer=5000] - The duration of each slide transition in milliseconds. Defaults to 5000ms (5 seconds).
+     */
     constructor(element, timer = 5000) {
+        /**
+         * The DOM element representing the container of the slideshow.
+         * @type {HTMLElement}
+         */
         this.domElement = element;
+
+        /**
+         * The collection of child elements representing individual slides.
+         * @type {NodeList}
+         */
         this.children = this.domElement.querySelectorAll(".slide");
+
+        /**
+         * The index of the currently displayed slide.
+         * @type {number}
+         */
         this.currentItem = 0;
+
+        /**
+         * The duration of each slide transition in milliseconds.
+         * @type {number}
+         */
         this.timer = this.domElement.dataset.mdpgTime ? this.domElement.dataset.mdpgTime : timer;
+
+        // Initialize the slideshow by displaying the first slide
         this.showSlide(0);
     }
 
+    /**
+     * Displays the slide with the specified index.
+     * @param {number} num - The index of the slide to display.
+     */
     showSlide(num) {
+        // Ensure the index is within the valid range
         if (num >= this.children.length) num = 0;
         if (num < 0) num = this.children.length - 1;
+
+        // Remove the "active" class from all slides
         this.children.forEach(child => child.classList.remove("active"));
 
+        // Add the "active" class to the slide at the specified index
         this.children[num].classList.add("active");
 
+        // Update the index of the current slide
         this.currentItem = num;
+
+        // Set a timeout to transition to the next slide after the specified duration
         setTimeout(() => this.nextSlide(), this.timer);
     }
 
+    /**
+     * Displays the next slide in the slideshow.
+     */
     nextSlide() {
+        // Display the next slide by calling showSlide() with the index of the next slide
         this.showSlide(this.currentItem + 1);
     }
 };
@@ -929,17 +1040,20 @@ materialpg.Modal = class {
     }
 };
 
+/**
+ * Represents a data table with pagination functionality.
+ * @class
+ */
 materialpg.DataTable = class {
     /**
-     * Main constructor
-     *
-     * @param {Element} domElement The DOM element of the <div> where the <table> and the pagination are
-     * @param {string} page The page the object belongs to
-     * @param {string} destination The URL to fetch the data from
-     * @param {JSON} data The object for retrieving and displaying the columns, as follows:
-     * {
-     *      column: [htmlBefore, htmlAfter],
-     * }
+     * Creates an instance of DataTable.
+     * @constructor
+     * @param {Element} domElement - The DOM element of the <div> where the <table> and the pagination are.
+     * @param {string} page - The page the object belongs to.
+     * @param {string} destination - The URL to fetch the data from.
+     * @param {Object} data - The object for retrieving and displaying the columns.
+     * @param {Object.<string, string[]>} data - Object containing column names and corresponding HTML content.
+     * @param {string[]} data.column - Array containing HTML content before and after each column.
      */
     constructor(domElement, page, destination, data) {
         // Save DOM element
@@ -981,6 +1095,9 @@ materialpg.DataTable = class {
         this.getData();
     }
 
+    /**
+     * Creates helper elements for loading, error, and empty states.
+     */
     createHelpers() {
         // Get table card
         this.tableDiv = this.domElement.querySelector(".table-card");
@@ -1014,6 +1131,9 @@ materialpg.DataTable = class {
         this.domElement.append(this.helpers.empty);
     }
 
+    /**
+     * Initializes column sorters.
+     */
     initSorters() {
         // Get the table sorters (if any)
         this.sorters = this.domElement.querySelectorAll(".table-sort[data-mdpg-column-sort]");
@@ -1027,6 +1147,11 @@ materialpg.DataTable = class {
         });
     }
 
+    /**
+     * Handles sorting of table columns.
+     * @param {Element} clickable - The clickable element triggering the sorting action.
+     * @param {Element} sortColumn - The column element to be sorted.
+     */
     tableSort(clickable, sortColumn) {
         // Direction constants
         const direction = ["ASC", "DESC"];
@@ -1068,6 +1193,9 @@ materialpg.DataTable = class {
         }
     }
 
+    /**
+     * Displays the table content.
+     */
     displayTable() {
         // Get element
         const tableElement = this.domElement.querySelector("tbody");
@@ -1120,12 +1248,11 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Sets the page to a specific number, and fetches the data
-     *
-     * @param {number} page The page to set
+     * Sets the page to a specific number, and fetches the data.
+     * @param {number} page - The page number to set.
      */
     setPage(page) {
-        // Only change the page if its valid
+        // Only change the page if it's valid
         if (this.options.page != page && page > 0 && page <= this.totalPages) {
             this.options.page = page;
             this.getData();
@@ -1133,24 +1260,23 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Sends to next page (if available), and fetches the data
+     * Moves to the next page (if available), and fetches the data.
      */
     nextPage() {
         if (this.options.page < this.totalPages) this.setPage(this.options.page + 1);
     }
 
     /**
-     * Sends to previous page (if available), and fetches the data
+     * Moves to the previous page (if available), and fetches the data.
      */
     previousPage() {
         if (this.options.page > 1) this.setPage(this.options.page - 1);
     }
 
     /**
-     * Sets the sorting by column and direction, and fetches the data
-     *
-     * @param {string} column The name of the column to sort
-     * @param {"ASC" | "DESC" | ""} direction The sorting direction
+     * Sets the sorting by column and direction, and fetches the data.
+     * @param {string} column - The name of the column to sort.
+     * @param {"ASC" | "DESC" | ""} direction - The sorting direction.
      */
     setSort(column, direction = "") {
         this.options.sort.column = column;
@@ -1161,10 +1287,9 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Saves the search
-     *
-     * @param {string} term The search term
-     * @param {array} column The array of columns to search from
+     * Sets the search term and columns to search from, and fetches the data.
+     * @param {string} [term=""] - The search term.
+     * @param {array} [column=[]] - The array of columns to search from.
      */
     setSearch(term = "", column = []) {
         this.options.search.term = term;
@@ -1174,6 +1299,10 @@ materialpg.DataTable = class {
         this.getData();
     }
 
+    /**
+     * Generates pagination.
+     * @param {number} [pageDisplayAmt=5] - The number of pages to display.
+     */
     genPagination(pageDisplayAmt = 5) {
         // Set total Pages
         this.totalPages = Math.ceil(+this.response.data.count / 25);
@@ -1253,9 +1382,8 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Function to set the row click callback
-     *
-     * @param {function} callback The callback function that will be executed when the user clicks on each row
+     * Sets the row click callback.
+     * @param {function} callback - The callback function that will be executed when the user clicks on each row.
      */
     rowClick(callback) {
         // Get rows
@@ -1272,6 +1400,9 @@ materialpg.DataTable = class {
         });
     }
 
+    /**
+     * Fetches data from the server and updates the table.
+     */
     getData() {
         // Clean Table contents
         const contents = this.tableDiv.querySelector("tbody");
