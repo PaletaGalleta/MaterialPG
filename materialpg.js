@@ -1044,22 +1044,23 @@ materialpg.Modal = class {
  * Represents a data table with pagination functionality.
  * @class
  */
+/**
+ * DataTable class for handling table data and pagination.
+ */
 materialpg.DataTable = class {
     /**
-     * Creates an instance of DataTable.
-     * @constructor
-     * @param {Element} domElement - The DOM element of the <div> where the <table> and the pagination are.
-     * @param {string} page - The page the object belongs to.
-     * @param {string} destination - The URL to fetch the data from.
-     * @param {Object} data - The object for retrieving and displaying the columns.
-     * @param {Object.<string, string[]>} data - Object containing column names and corresponding HTML content.
-     * @param {string[]} data.column - Array containing HTML content before and after each column.
+     * Main constructor
+     *
+     * @param {Element} domElement The DOM element of the <div> where the <table> and the pagination are
+     * @param {string} page The page the object belongs to
+     * @param {string} destination The URL to fetch the data from
+     * @param {function} displayCallback The callback function to display table rows
      */
-    constructor(domElement, page, destination, data) {
+    constructor(domElement, page, destination, displayCallback) {
         // Save DOM element
         this.domElement = domElement;
-        // Save table tamplate data
-        this.tableData = data;
+        // Save table template data
+        this.displayCallback = displayCallback;
         // Save API destination
         this.destination = destination;
         // Start total pages at 0
@@ -1096,43 +1097,57 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Creates helper elements for loading, error, and empty states.
+     * Creates helper elements for loading, error, and empty table.
      */
     createHelpers() {
         // Get table card
         this.tableDiv = this.domElement.querySelector(".table-card");
 
-        //* Create loading div
-        this.helpers.loading = document.createElement("div");
-        this.helpers.loading.classList.add("card-elevated", "table-loading", "d-none");
-        this.helpers.loading.innerHTML = `<div class="card-empty"><div class="spinner mb-4"></div><span>Cargando</span></div>`;
+        //* Loading div
+        let helperElement = this.domElement.querySelector(".table-loading");
+        if (helperElement) this.helpers.loading = helperElement;
+        else {
+            this.helpers.loading = document.createElement("div");
+            this.helpers.loading.classList.add("card-elevated", "table-loading", "d-none");
+            this.helpers.loading.innerHTML = `<div class="card-empty"><div class="spinner mb-4"></div><span>Loading</span></div>`;
 
-        //* Create error div
-        this.helpers.error = document.createElement("div");
-        this.helpers.error.classList.add("card-elevated", "table-error", "d-none");
-        const errorContent = document.createElement("div");
-        errorContent.classList.add("card-empty");
-        errorContent.innerHTML = `<div class="icon">assignment_late</div><span>Oops! Ocurrió un error</span>`;
-        // Create try again button
-        const tryAgain = document.createElement("div");
-        tryAgain.classList.add("button-outlined", "mt-4");
-        tryAgain.innerHTML = "Intentar de nuevo";
-        tryAgain.addEventListener("click", this.getData.bind(this));
-        errorContent.append(tryAgain);
-        this.helpers.error.append(errorContent);
+            this.domElement.append(this.helpers.loading);
+        }
+
+        //* Error div
+        helperElement = this.domElement.querySelector(".table-error");
+        if (helperElement) this.helpers.error = helperElement;
+        else {
+            this.helpers.error = document.createElement("div");
+            this.helpers.error.classList.add("card-elevated", "table-error", "d-none");
+            const errorContent = document.createElement("div");
+            errorContent.classList.add("card-empty");
+            errorContent.innerHTML = `<div class="icon">assignment_late</div><span>Oops! An error occurred</span>`;
+            // Create try again button
+            const tryAgain = document.createElement("div");
+            tryAgain.classList.add("button-outlined", "mt-4");
+            tryAgain.innerHTML = "Try again";
+            tryAgain.addEventListener("click", this.getData.bind(this));
+            errorContent.append(tryAgain);
+            this.helpers.error.append(errorContent);
+
+            this.domElement.append(this.helpers.error);
+        }
 
         //* Create "No records found" div
-        this.helpers.empty = document.createElement("div");
-        this.helpers.empty.classList.add("card-elevated", "table-empty", "d-none");
-        this.helpers.empty.innerHTML = `<div class="card-empty"><div class="icon">assignment_late</div><span>Oops! Ocurrió un error</span></div>`;
+        helperElement = this.domElement.querySelector(".table-empty");
+        if (helperElement) this.helpers.empty = helperElement;
+        else {
+            this.helpers.empty = document.createElement("div");
+            this.helpers.empty.classList.add("card-elevated", "table-empty", "d-none");
+            this.helpers.empty.innerHTML = `<div class="card-empty"><div class="icon">assignment</div><span>No Records</span></div>`;
 
-        this.domElement.append(this.helpers.loading);
-        this.domElement.append(this.helpers.error);
-        this.domElement.append(this.helpers.empty);
+            this.domElement.append(this.helpers.empty);
+        }
     }
 
     /**
-     * Initializes column sorters.
+     * Initializes column sorters and adds click listeners.
      */
     initSorters() {
         // Get the table sorters (if any)
@@ -1148,9 +1163,10 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Handles sorting of table columns.
-     * @param {Element} clickable - The clickable element triggering the sorting action.
-     * @param {Element} sortColumn - The column element to be sorted.
+     * Handles table column sorting.
+     *
+     * @param {Element} clickable The clickable element triggering the sort
+     * @param {Element} sortColumn The column to be sorted
      */
     tableSort(clickable, sortColumn) {
         // Direction constants
@@ -1194,7 +1210,7 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Displays the table content.
+     * Displays table rows and handles pagination.
      */
     displayTable() {
         // Get element
@@ -1210,18 +1226,9 @@ materialpg.DataTable = class {
                 const newRow = document.createElement("tr");
                 newRow.id = row["id"] || "";
 
-                // Add columns for row
-                for (const key in this.tableData) {
-                    //* Generate row
-                    // Get HTML before
-                    let rowData = this.tableData[key][0];
-                    // Get data
-                    rowData += row[key] || this.tableData[key][2] || ``;
-                    // Get HTML after
-                    rowData += this.tableData[key][1];
-                    // Add column to container
-                    newRow.innerHTML += rowData;
-                }
+                //* Generate row
+                const rowData = this.displayCallback(row);
+                newRow.innerHTML += rowData;
 
                 // Add event listener (if not empty)
                 if (this.rowCallback) {
@@ -1248,8 +1255,9 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Sets the page to a specific number, and fetches the data.
-     * @param {number} page - The page number to set.
+     * Sets the current page number and fetches data.
+     *
+     * @param {number} page The page number to set
      */
     setPage(page) {
         // Only change the page if it's valid
@@ -1260,23 +1268,24 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Moves to the next page (if available), and fetches the data.
+     * Moves to the next page and fetches data.
      */
     nextPage() {
         if (this.options.page < this.totalPages) this.setPage(this.options.page + 1);
     }
 
     /**
-     * Moves to the previous page (if available), and fetches the data.
+     * Moves to the previous page and fetches data.
      */
     previousPage() {
         if (this.options.page > 1) this.setPage(this.options.page - 1);
     }
 
     /**
-     * Sets the sorting by column and direction, and fetches the data.
-     * @param {string} column - The name of the column to sort.
-     * @param {"ASC" | "DESC" | ""} direction - The sorting direction.
+     * Sets the sorting column and direction, then fetches data.
+     *
+     * @param {string} column The name of the column to sort
+     * @param {"ASC" | "DESC" | ""} direction The sorting direction
      */
     setSort(column, direction = "") {
         this.options.sort.column = column;
@@ -1287,9 +1296,10 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Sets the search term and columns to search from, and fetches the data.
-     * @param {string} [term=""] - The search term.
-     * @param {array} [column=[]] - The array of columns to search from.
+     * Sets the search term and columns to search from, then fetches data.
+     *
+     * @param {string} term The search term
+     * @param {array} column The array of columns to search from
      */
     setSearch(term = "", column = []) {
         this.options.search.term = term;
@@ -1300,8 +1310,9 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Generates pagination.
-     * @param {number} [pageDisplayAmt=5] - The number of pages to display.
+     * Generates pagination UI.
+     *
+     * @param {number} pageDisplayAmt The amount of pages to display
      */
     genPagination(pageDisplayAmt = 5) {
         // Set total Pages
@@ -1382,8 +1393,9 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Sets the row click callback.
-     * @param {function} callback - The callback function that will be executed when the user clicks on each row.
+     * Sets the row click callback function.
+     *
+     * @param {function} callback The callback function to execute when a row is clicked
      */
     rowClick(callback) {
         // Get rows
@@ -1401,7 +1413,17 @@ materialpg.DataTable = class {
     }
 
     /**
-     * Fetches data from the server and updates the table.
+     * Sets the callback function for displaying table rows.
+     *
+     * @param {function} callback The callback function to display table rows
+     */
+    onDisplayTable(callback) {
+        // Save callback
+        this.displayCallback = callback;
+    }
+
+    /**
+     * Fetches data from the server and updates the table accordingly.
      */
     getData() {
         // Clean Table contents
@@ -1447,7 +1469,7 @@ materialpg.DataTable = class {
                     // Display Information
                     this.response = json;
                     this.data = this.response.data;
-                    if (this.data.length == 0) {
+                    if (this.data.count == 0) {
                         // No records found
                         this.helpers.empty.classList.remove("d-none");
                     } else {
