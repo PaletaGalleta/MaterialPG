@@ -1424,8 +1424,10 @@ materialpg.DataTable = class {
 
     /**
      * Fetches data from the server and updates the table accordingly.
+     *
+     * @param {function} callback The callback function after getting the data
      */
-    getData() {
+    getData(callback) {
         // Clean Table contents
         const contents = this.tableDiv.querySelector("tbody");
         const currentRows = contents.querySelectorAll("tr");
@@ -1485,6 +1487,10 @@ materialpg.DataTable = class {
             })
             .finally(() => {
                 this.helpers.loading.classList.add("d-none");
+                if (callback) {
+                    this.fetchCallback = callback;
+                    this.fetchCallback();
+                }
             });
     }
 };
