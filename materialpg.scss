@@ -1064,6 +1064,7 @@ input {
             font-family: v.$materialSymbols;
             color: inherit;
             align-items: center;
+            transition: transform v.$durationMedium2 v.$easingEmphasized;
         }
 
         &::after {
@@ -1434,18 +1435,6 @@ input:checked + .slider {
     @extend %before-show;
     opacity: 0.2;
     background-image: linear-gradient(0deg, v.$colorTertiaryContainer, v.$colorOnTertiaryContainer, v.$colorTertiaryContainer);
-    background-image: -moz-linear-gradient(
-        0deg,
-        v.$colorTertiaryContainer,
-        v.$colorOnTertiaryContainer,
-        v.$colorTertiaryContainer
-    );
-    background-image: -webkit-linear-gradient(
-        0deg,
-        v.$colorTertiaryContainer,
-        v.$colorOnTertiaryContainer,
-        v.$colorTertiaryContainer
-    );
     animation: anim-plh-wave 1.5s v.$easingStandard infinite linear;
 }
 

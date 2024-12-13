@@ -8655,6 +8655,7 @@ input[type=number], input[type=date] {
   font-family: "Material Symbols Rounded";
   color: inherit;
   align-items: center;
+  transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
 }
 .accordion-title::after {
   opacity: 0;
@@ -8962,7 +8963,6 @@ input:checked + .slider:active::before {
 .plh-wave .plh::after {
   opacity: 0.2;
   background-image: linear-gradient(0deg, var(--md-sys-color-tertiary-container), var(--md-sys-color-on-tertiary-container), var(--md-sys-color-tertiary-container));
-  background-image: -webkit-linear-gradient(0deg, var(--md-sys-color-tertiary-container), var(--md-sys-color-on-tertiary-container), var(--md-sys-color-tertiary-container));
   animation: anim-plh-wave 1.5s cubic-bezier(0.2, 0, 0, 1) infinite linear;
 }
 
