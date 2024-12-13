@@ -631,6 +631,10 @@ function showSnackbar(content, timeout = 5000) {
     }
 }
 
+function capitalize(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
+
 var materialpg = {};
 
 /**
