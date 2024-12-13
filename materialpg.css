@@ -6550,6 +6550,7 @@ p {
   display: flex;
   padding: 8px;
   align-items: center;
+  height: 100%;
 }
 .top-bar .button {
   z-index: 2;
@@ -6981,6 +6982,7 @@ p {
   align-items: stretch;
   overflow-y: auto;
   padding: 0 12px;
+  list-style-type: none;
 }
 .nav-rail ul:not(.nav-rail-bottom) {
   flex: 1;
